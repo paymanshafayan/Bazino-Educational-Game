@@ -17,6 +17,11 @@ var _resolved := false
 var _retries := 0
 var _wall: StaticBody3D
 var _riddle: Label3D
+var _time_limit: float = 0.0
+var _time_left: float = 0.0
+var _timer_running := false
+var _time_label: Label3D
+var _time_base_y: float = 0.0
 
 
 static func create(cfg: Dictionary) -> RuneGate:
@@ -26,9 +31,58 @@ static func create(cfg: Dictionary) -> RuneGate:
 
 
 func _ready() -> void:
+	_time_limit = float(config.get("time_limit", 0.0))
+	_time_left = _time_limit
 	_build_wall()
 	_build_riddle()
 	_build_pads()
+	_build_trigger()
+
+
+func _process(delta: float) -> void:
+	if _resolved or not _timer_running or _time_limit <= 0.0:
+		return
+	_time_left -= delta
+	if _time_label:
+		_time_label.text = "⏱ %s %.1f" % [tr("gate_timer"), maxf(_time_left, 0.0)]
+		_time_label.modulate = Color("ff5d5d") if _time_left < 3.0 else Color("ffd166")
+	if _time_left <= 0.0:
+		_timeout()
+
+
+func _build_trigger() -> void:
+	# نزدیک‌شدن به دروازه → شروع زمان محدود (اگر داده گفته باشد)
+	if _time_limit <= 0.0:
+		return
+	var zone := Area3D.new()
+	zone.collision_layer = 8
+	zone.collision_mask = 2
+	var col := CollisionShape3D.new()
+	var sph := SphereShape3D.new()
+	sph.radius = 10.0
+	col.shape = sph
+	col.position = Vector3(0, 2.0, 2.0)
+	zone.add_child(col)
+	add_child(zone)
+	zone.body_entered.connect(_on_zone_entered)
+
+
+func _on_zone_entered(body: Node3D) -> void:
+	if body is Player3D and not _timer_running and not _resolved:
+		_timer_running = true
+		Sfx.play("scroll", -8.0)
+
+
+func _timeout() -> void:
+	_retries += 1
+	Sfx.play("gate_bad", -4.0)
+	Telemetry.track("obstacle_attempt", config.get("topic_id", ""),
+		{"dim": 3, "solved": false, "retries": _retries, "timeout": true})
+	_shuffle()
+	_time_left = _time_limit  # فرصت دوباره؛ هر بار سخته‌تر نمی‌شود
+	for p in get_tree().get_nodes_in_group("player"):
+		if p is Player3D and p.global_position.distance_to(global_position) < 12.0:
+			p.knockback_simple(4.0)
 
 
 func _build_wall() -> void:
@@ -78,6 +132,15 @@ func _build_riddle() -> void:
 	hint.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	hint.position = Vector3(0, WALL_H + 0.4, 0.3)
 	add_child(hint)
+	if _time_limit > 0.0:
+		_time_label = Label3D.new()
+		_time_label.text = "⏱ %s %.1f" % [tr("gate_timer"), _time_limit]
+		_time_label.font_size = 70
+		_time_label.modulate = Color("ffd166")
+		_time_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		_time_label.position = Vector3(0, WALL_H - 0.6, 0.3)
+		_time_base_y = _time_label.position.y
+		add_child(_time_label)
 
 
 func _build_pads() -> void:

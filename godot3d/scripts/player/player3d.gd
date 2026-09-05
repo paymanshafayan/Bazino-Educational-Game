@@ -6,6 +6,7 @@ extends CharacterBody3D
 signal hp_changed(hp: int, hp_max: int)
 signal lum_picked(amount: int)
 signal attack_landed
+signal combo_display(combo: int)
 signal died
 
 const RUN_SPEED := 5.6
@@ -168,6 +169,7 @@ func _attack() -> void:
 		return
 	if Input.is_action_just_pressed("attack"):
 		_combo = (_combo % 3) + 1
+		combo_display.emit(_combo)
 		_attack_left = ATTACK_TIME
 		_chain_gap = ATTACK_TIME + ATTACK_CHAIN_GAP
 		Sfx.play("attack", -3.0, 0.95 + _combo * 0.08)

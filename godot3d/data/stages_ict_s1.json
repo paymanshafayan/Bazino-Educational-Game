@@ -1,0 +1,33 @@
+{
+  "region": "ict",
+  "season": 1,
+  "stages": [
+    {"index_no": 1, "free": true, "title_key": "region_ict",
+     "rooms": [
+       {"type": "circuit", "circuit": {"topic_id": "ict.g8.guz.algoritma",
+         "challenge": "AND kapısı: ikisi de 1 →", "start": [0, 0, 0], "target": [1, 1, 0]}},
+       {"type": "battle", "enemies": 4, "enemy_theme": "number_wisp"},
+       {"type": "obstacle", "gate": {"topic_id": "ict.g8.guz.medya",
+         "kind": "value_panel", "challenge": "Bilinmeyen link geldi → önce?",
+         "panels": [{"v": "kaynağını doğrula", "ok": true}, {"v": "hemen tıkla", "ok": false},
+                    {"v": "arkadaşa yolla", "ok": false}, {"v": "şifreni gir", "ok": false}],
+         "time_limit": 12}},
+       {"type": "boss", "boss_cfg": {"name_key": "boss_virus",
+         "topic_prefix": "ict.g8.guz",
+         "topic_suffixes": ["algoritma", "algoritma", "medya"], "color": "d05aff"},
+        "phases": [
+          {"equation": "Döngü: 3 kez 'ileri' yazdır → çıktı?",
+           "panels": [{"v": "ileri ileri ileri", "ok": true}, {"v": "ileri", "ok": false},
+                      {"v": "3", "ok": false}, {"v": "hata", "ok": false}]},
+          {"equation": "Koşul: EĞER skor>10 → 'kazandın'; skor=5 →?",
+           "panels": [{"v": "hiçbir şey", "ok": true}, {"v": "kazandın", "ok": false},
+                      {"v": "5", "ok": false}, {"v": "hata", "ok": false}]},
+          {"equation": "Virus alarmı: güvenli davranış?",
+           "panels": [{"v": "güncelleme + yedek", "ok": true},
+                      {"v": "internete bağlan", "ok": false},
+                      {"v": "şifreyi paylaş", "ok": false},
+                      {"v": "her şeyi sil", "ok": false}]}
+        ]}
+     ]}
+  ]
+}

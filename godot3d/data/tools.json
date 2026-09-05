@@ -1,0 +1,16 @@
+{
+  "tools": [
+    {"id": "carpanlar", "topic_id": "math.g8.guz.carpanlar", "key": "tool_carpanlar",
+     "color": "ffb347", "power": "factor_slash",
+     "desc": "EBOB/EKOK totemi: sayı düşmanlarına karşı kalkan kırıcı."},
+    {"id": "uslu", "topic_id": "math.g8.guz.uslu", "key": "tool_uslu",
+     "color": "7ecaff", "power": "exp_dash",
+     "desc": "Üssün gücü: üst üste çarpmaları tek sıçrayışla çözer."},
+    {"id": "karekok", "topic_id": "math.g8.guz.karekoklu", "key": "tool_karekok",
+     "color": "9dff70", "power": "root_guard",
+     "desc": "Kök sadeleştirir: radyal tuzakları kapatır."},
+    {"id": "ozdeslik", "topic_id": "math.g8.guz.ozdeslik", "key": "tool_ozdeslik",
+     "color": "ff8ad1", "power": "identity_seal",
+     "desc": "Özdeşlik: iki yüzlü kapıları tek hamlede açar."}
+  ]
+}
