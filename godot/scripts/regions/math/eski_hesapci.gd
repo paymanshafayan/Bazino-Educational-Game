@@ -134,6 +134,9 @@ func _start_phase(i: int) -> void:
 	_phase = i
 	_phase_t0 = Time.get_ticks_msec()
 	_phase_retries = 0
+	if i == 0:
+		Sfx.play("boss_roar", -1.0)
+		Sfx.play_music("boss")
 	var ph: Dictionary = phases[i]
 	_eq_label.text = ph.get("equation", "")
 	for p in _panels:
@@ -169,6 +172,7 @@ func _break_shield() -> void:
 	_shielded = false
 	_vuln_left = VULN_TIME
 	_shield_poly.visible = false
+	Sfx.play("phase_break", -2.0)
 	Telemetry.track("boss_phase", topic_prefix + "." + _phase_topic(), {
 		"phase": _phase, "solved": true,
 		"time_ms": Time.get_ticks_msec() - _phase_t0,
@@ -213,6 +217,8 @@ func take_damage(amount: int, _from: Vector2) -> void:
 
 
 func _win() -> void:
+	Sfx.play("victory", -1.0)
+	Sfx.play_music("ambient")
 	SaveData.add_lum(60)
 	SaveData.set_region_cleared(topic_prefix.get_slice(".", 0), 1)
 	Telemetry.track("boss_defeated", topic_prefix + "." + _phase_topic(),

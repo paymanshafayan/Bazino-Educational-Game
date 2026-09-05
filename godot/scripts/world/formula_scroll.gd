@@ -47,6 +47,7 @@ func _on_body(body: Node2D) -> void:
 	if _taken or not (body is Player):
 		return
 	_taken = true
+	Sfx.play("scroll", -1.0)
 	SaveData.add_tool(tool_id)
 	SaveData.add_lum(10)
 	Telemetry.track("tool_acquired", topic_id, {"tool_id": tool_id})

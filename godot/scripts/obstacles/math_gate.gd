@@ -117,8 +117,10 @@ func _resolve(ok: bool) -> void:
 			"solved": true, "time_ms": ms, "retries": retries,
 			"tool_correct": SaveData.has_tool_for(config.get("topic_id", ""))})
 		SaveData.add_lum(5)
+		Sfx.play("gate_ok", -2.0)
 		_open()
 	else:
+		Sfx.play("gate_bad", -4.0)
 		retries += 1
 		Telemetry.track("obstacle_attempt", config.get("topic_id", ""), {
 			"solved": false, "retries": retries})
@@ -130,6 +132,7 @@ func _resolve(ok: bool) -> void:
 
 func _timeout_shuffle() -> void:
 	# پایان زمان: سکوها برمی‌خورند (نه تنبیه خشک — صنعت بازی)
+	Sfx.play("gate_bad", -6.0, 0.8)
 	retries += 1
 	SaveData.add_lum(-SHUFFLE_PENALTY_LUM)
 	_timer_left = float(config.get("time_limit", 10))

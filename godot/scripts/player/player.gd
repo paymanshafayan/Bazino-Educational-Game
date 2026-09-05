@@ -36,6 +36,7 @@ var _coyote := 0.0
 var _buffer := 0.0
 var _dash_left := 0.0
 var _dash_cd := 0.0
+var _air := false
 var _iframes := 0.0
 var _attack_left := 0.0
 var _combo := 0
@@ -142,6 +143,7 @@ func _jump() -> void:
 		_buffer = 0.0
 		_coyote = 0.0
 		_squash(Vector2(0.82, 1.18))
+		Sfx.play("jump", -2.0)
 	if Input.is_action_just_released("jump") and velocity.y < 0.0:
 		velocity.y *= 0.5  # پرش کوتاه با ول‌دادن زود کلید
 
@@ -156,6 +158,7 @@ func _dash(dir: float, delta: float) -> void:
 		_dash_cd = DASH_COOLDOWN
 		_iframes = maxf(_iframes, DASH_IFRAMES)
 		_squash(Vector2(1.25, 0.75))
+		Sfx.play("dash", -2.0)
 
 
 func _attack(delta: float) -> void:
@@ -168,6 +171,7 @@ func _attack(delta: float) -> void:
 		_attack_left = ATTACK_TIME
 		_chain_gap = ATTACK_TIME + ATTACK_CHAIN_GAP
 		velocity.x = facing * (RUN_SPEED * (0.55 if _combo == 3 else 0.3))
+		Sfx.play("attack", -3.0, 0.95 + _combo * 0.08)
 		blade.strike(facing, ATTACK_TIME, _combo == 3)
 		attack_landed.emit()
 		Telemetry.track("attack_swing", "", {"combo": _combo})
@@ -178,6 +182,7 @@ func take_damage(amount: int, from_pos: Vector2) -> void:
 		return
 	hp -= amount
 	_iframes = HURT_IFRAMES
+	Sfx.play("hurt", -3.0)
 	velocity = Vector2(signi(global_position.x - from_pos.x) * KNOCKBACK.x, KNOCKBACK.y)
 	hp_changed.emit(hp, hp_max)
 	var tw := create_tween()
@@ -198,6 +203,7 @@ func knockback_simple(force: float = 320.0) -> void:
 
 
 func collect_lum(n: int) -> void:
+	Sfx.play("lum", -4.0)
 	SaveData.add_lum(n)
 	lum_picked.emit(n)
 

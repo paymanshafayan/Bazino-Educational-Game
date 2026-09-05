@@ -28,6 +28,7 @@ static func create() -> Menus:
 
 
 func _ready() -> void:
+	Sfx.play_music("ambient")
 	_build()
 
 
@@ -160,24 +161,28 @@ func _build() -> void:
 
 
 func _on_lang(code: String) -> void:
+	Sfx.play("click", -6.0)
 	SaveData.data.lang = code
 	SaveData.save_now()
 	TranslationServer.set_locale(code)
 
 
 func _on_region(r: String) -> void:
+	Sfx.play("click", -6.0)
 	region = r
 	weekly = 0
 	_region_lbl.text = tr("region_" + r)
 
 
 func _on_start() -> void:
+	Sfx.play("click", -6.0)
 	SaveData.data.grade = _grade.get_selected_id()
 	SaveData.save_now()
 	start_stage.emit(region, maxi(1, _stage_pick.get_selected_id()))
 
 
 func _on_weekly() -> void:
+	Sfx.play("click", -6.0)
 	if not SaveData.data.venue_mode:
 		_status.text = tr("venue_locked")
 		return
@@ -186,6 +191,7 @@ func _on_weekly() -> void:
 
 
 func _on_tournament() -> void:
+	Sfx.play("click", -6.0)
 	var cleared := SaveData.is_region_cleared("math", 1) \
 		and SaveData.is_region_cleared("physics", 1) \
 		and SaveData.is_region_cleared("english", 1)
@@ -196,6 +202,7 @@ func _on_tournament() -> void:
 
 
 func _on_login() -> void:
+	Sfx.play("click", -6.0)
 	_status.text = "…"
 	Api.login(_email.text, _pass.text)
 
@@ -205,10 +212,12 @@ func _on_login_result(ok: bool, _d: Dictionary) -> void:
 
 
 func _on_guest() -> void:
+	Sfx.play("click", -6.0)
 	_status.text = tr("ui_offline") + " ✓"
 
 
 func _on_venue() -> void:
+	Sfx.play("click", -6.0)
 	Api.join_venue(_venue_code.text.strip_edges())
 
 

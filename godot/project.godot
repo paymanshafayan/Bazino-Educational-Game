@@ -11,6 +11,7 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 Api="*res://scripts/net/api.gd"
 Telemetry="*res://scripts/net/telemetry.gd"
 SaveData="*res://scripts/core/save.gd"
+Sfx="*res://scripts/core/sfx.gd"
 
 [display]
 window/size/viewport_width=1280

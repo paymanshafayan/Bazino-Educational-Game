@@ -78,6 +78,7 @@ func take_damage(amount: int, from_pos: Vector2) -> void:
 
 
 func _die() -> void:
+	Sfx.play("land", -3.0, 0.7)
 	died.emit(self)
 	SaveData.add_lum(3)
 	Telemetry.track("enemy_down", "", {"hp0": true})
