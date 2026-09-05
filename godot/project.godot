@@ -31,3 +31,4 @@ environment/defaults/default_clear_color=Color(0.045, 0.05, 0.09, 1)
 
 [internationalization]
 locale/fallback="tr"
+locale/translations=PackedStringArray("res://data/i18n.csv")
