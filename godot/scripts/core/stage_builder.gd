@@ -92,9 +92,9 @@ func _add_platform(pos: Vector2, w: float) -> void:
 	var rect := RectangleShape2D.new()
 	rect.size = Vector2(w, 12)
 	sh.shape = rect
+	sh.one_way_collision = true
 	pb.add_child(sh)
 	pb.position = pos
-	pb.one_way_collision = true
 	add_child(pb)
 	var lay := Polygon2D.new()
 	lay.polygon = PackedVector2Array([
