@@ -15,7 +15,7 @@ var _t0_ms := 0
 var _resolved := false
 var _wall_body: StaticBody2D
 var _wall_poly: Polygon2D
-var _panels: Array = []
+var _panels: Array[Area2D] = []
 var _stand_progress := 0.0
 var _candidate: Area2D
 var _timer_left := 0.0
