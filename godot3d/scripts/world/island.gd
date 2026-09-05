@@ -7,10 +7,15 @@ const RADIUS := 34.0
 
 var env_sky_top := Color("0b0e1a")
 var accent := Color("8df7c9")
+var length := 400.0   # راهرو: از z=+20 تا z=-length
+var width := 42.0
 
 
-func build(accent_hex: String = "8df7c9", ground_hex: String = "16203a") -> void:
+func build(accent_hex: String = "8df7c9", ground_hex: String = "16203a",
+		p_length: float = 400.0, p_width: float = 42.0) -> void:
 	accent = Color(accent_hex)
+	length = p_length
+	width = p_width
 	_make_environment()
 	_make_ground(ground_hex)
 	_make_scatter()
@@ -43,60 +48,75 @@ func _make_environment() -> void:
 
 
 func _make_ground(ground_hex: String) -> void:
-	# بستر جزیره: سیلندر بزرگِ مسطح با لبهٔ شیبدار (placeholder پیش از پک‌های محیط)
+	# بستر راهرو: تختهٔ بلند از z=+20 تا z=-length (placeholder پیش از پک‌های محیط)
 	var body := StaticBody3D.new()
 	body.collision_layer = 1
 	add_child(body)
+	var mid_z := 20.0 - (length + 20.0) * 0.5
 	var col := CollisionShape3D.new()
-	var slab := CylinderShape3D.new()
-	slab.radius = RADIUS
-	slab.height = 2.0
+	var slab := BoxShape3D.new()
+	slab.size = Vector3(width, 2.0, length + 20.0)
 	col.shape = slab
-	col.position = Vector3(0, -1.0, 0)
+	col.position = Vector3(0, -1.0, mid_z)
 	body.add_child(col)
 	var mesh := MeshInstance3D.new()
-	var cyl := CylinderMesh.new()
-	cyl.top_radius = RADIUS
-	cyl.bottom_radius = RADIUS * 0.8
-	cyl.height = 2.2
-	cyl.radial_segments = 48
-	mesh.mesh = cyl
-	mesh.position = Vector3(0, -1.1, 0)
+	var bm := BoxMesh.new()
+	bm.size = Vector3(width, 2.2, length + 20.0)
+	mesh.mesh = bm
+	mesh.position = Vector3(0, -1.1, mid_z)
 	var mat := StandardMaterial3D.new()
 	mat.albedo_color = Color(ground_hex)
 	mat.roughness = 0.95
 	mesh.material_override = mat
 	add_child(mesh)
+	# لبه‌های درخشان دو طرف راهرو
+	for side in [-1.0, 1.0]:
+		var rail := MeshInstance3D.new()
+		var rm := BoxMesh.new()
+		rm.size = Vector3(0.35, 0.18, length + 20.0)
+		rail.mesh = rm
+		rail.position = Vector3(side * (width * 0.5 - 0.4), 0.09, mid_z)
+		var rmat := StandardMaterial3D.new()
+		rmat.albedo_color = accent.darkened(0.4)
+		rmat.emission_enabled = true
+		rmat.emission = accent
+		rmat.emission_energy_multiplier = 1.1
+		rail.material_override = rmat
+		add_child(rail)
 
 
 func _make_scatter() -> void:
 	# سنگ‌ها و کریستال‌های درخشان پراکنده (placeholder تا ورود پک‌های محیط)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 42
-	for i in 26:
+	var count := int(length / 14.0)
+	for i in count:
 		var rock := MeshInstance3D.new()
 		var cone := ConeMesh.new()
 		cone.top_radius = 0.0
 		cone.bottom_radius = rng.randf_range(0.35, 0.8)
 		cone.height = rng.randf_range(0.8, 2.2)
 		rock.mesh = cone
-		var ang := rng.randf_range(0.0, TAU)
-		var r := rng.randf_range(RADIUS * 0.45, RADIUS * 0.92)
-		rock.position = Vector3(cos(ang) * r, cone.height * 0.5 - 0.15, sin(ang) * r)
+		var side := 1.0 if rng.randf() > 0.5 else -1.0
+		var x := side * rng.randf_range(width * 0.5 + 1.5, width * 0.5 + 6.0)
+		var z := rng.randf_range(18.0, -length)
+		rock.position = Vector3(x, cone.height * 0.5 - 0.15, z)
 		rock.rotation.y = rng.randf_range(0.0, TAU)
 		var mat := StandardMaterial3D.new()
 		mat.albedo_color = Color("2a3557")
 		rock.material_override = mat
 		add_child(rock)
-	for j in 10:
+	var cry_count := int(count * 0.4)
+	for j in cry_count:
 		var cry := MeshInstance3D.new()
 		var cone2 := ConeMesh.new()
 		cone2.bottom_radius = rng.randf_range(0.16, 0.3)
 		cone2.height = rng.randf_range(1.0, 2.4)
 		cry.mesh = cone2
-		var ang2 := rng.randf_range(0.0, TAU)
-		var r2 := rng.randf_range(RADIUS * 0.3, RADIUS * 0.85)
-		cry.position = Vector3(cos(ang2) * r2, cone2.height * 0.5, sin(ang2) * r2)
+		var side2 := 1.0 if rng.randf() > 0.5 else -1.0
+		cry.position = Vector3(
+			side2 * rng.randf_range(width * 0.5 + 1.0, width * 0.5 + 5.0),
+			cone2.height * 0.5, rng.randf_range(18.0, -length))
 		var mat2 := StandardMaterial3D.new()
 		mat2.albedo_color = accent.darkened(0.3)
 		mat2.emission_enabled = true

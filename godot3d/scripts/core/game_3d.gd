@@ -2,16 +2,21 @@
 class_name Game3D
 extends Node3D
 
-const REGION := "math"
 const SEASON := 1
 
+var _region := "math"
+var _stage_index := 1
+var _stage_count := 1
 var _island: Island3D
 var _player: Player3D
 var _cam: CameraRig
 var _hud: Hud3D
 var _pending := 0          # اتاق‌های ناتمام: دروازه + دشمن + گنج
 var _cleared := false
+var _stage_cleared := false
 var _stage_title := ""
+var _boss: Boss3D
+var _next_z := -10.0
 
 
 func _ready() -> void:
@@ -106,8 +111,41 @@ func _title() -> void:
 	btn.pressed.connect(func():
 		Sfx.play("click", -5.0)
 		layer.queue_free()
-		_start_game())
+		_region_select())
 	layer.add_child(btn)
+
+
+func _region_select() -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "RegionSelect"
+	add_child(layer)
+	var veil := ColorRect.new()
+	veil.color = Color(0.03, 0.04, 0.09, 0.9)
+	veil.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(veil)
+	var title := Label.new()
+	title.text = "🗺 " + tr("ui_play")
+	title.add_theme_font_size_override("font_size", 34)
+	title.add_theme_color_override("font_color", Color("7ecaff"))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.position = Vector2(340, 120)
+	title.size = Vector2(600, 50)
+	layer.add_child(title)
+	var i := 0
+	for region in StageLoader.regions():
+		var b := Button.new()
+		var done := SaveData.is_region_cleared(region, SEASON)
+		b.text = ("✅ " if done else "🏝 ") + StageLoader.region_title(region)
+		b.custom_minimum_size = Vector2(320, 44)
+		b.position = Vector2(480, 190 + i * 52)
+		var rg := region
+		b.pressed.connect(func() -> void:
+			Sfx.play("click", -5.0)
+			layer.queue_free()
+			_region = rg
+			_start_game())
+		layer.add_child(b)
+		i += 1
 
 
 func _ping_status() -> void:
@@ -130,7 +168,12 @@ func _on_login_result(ok: bool, _d: Dictionary) -> void:
 func _start_game() -> void:
 	_island = Island3D.new()
 	add_child(_island)
-	_island.build("8df7c9", "16203a")
+	var stage_data := StageLoader.load_stages(_region, SEASON)
+	_stage_count = maxi(stage_data.size(), 1)
+	var rooms_n := 0
+	for st in stage_data:
+		rooms_n += (st.get("rooms", []) as Array).size()
+	_island.build("8df7c9", "16203a", float(rooms_n) * 16.0 + 90.0)
 	_player = Player3D.new()
 	add_child(_player)
 	_player.position = Vector3(0, 0.5, 14)
@@ -141,8 +184,10 @@ func _start_game() -> void:
 	add_child(_hud)
 	_hud.setup(_player)
 	Sfx.play_music("ambient")
-	await _build_stage(REGION, SEASON, 1)
-	_hud.show_banner("%s — %s" % [StageLoader.region_title(REGION), _stage_title])
+	_stage_index = 1
+	await _build_stage(_region, SEASON, _stage_index)
+	_hud.show_banner("%s — %s (1/%d)" % [
+		StageLoader.region_title(_region), _stage_title, _stage_count])
 
 
 func _build_stage(region: String, season: int, index_no: int) -> void:
@@ -157,17 +202,19 @@ func _build_stage(region: String, season: int, index_no: int) -> void:
 		return
 	_stage_title = tr(str(stage.get("title_key", "region_math")))
 	var rooms: Array = stage.get("rooms", [])
-	var z := -10.0
 	for i in rooms.size():
 		var room: Dictionary = rooms[i]
+		var pos := Vector3(0, 0, _next_z)
 		match str(room.get("type", "")):
 			"obstacle":
-				_spawn_gate(room, Vector3(0, 0, z))
+				_spawn_gate(room, pos)
 			"battle":
-				_spawn_battle(room, Vector3(0, 0, z))
+				_spawn_battle(room, pos)
 			"treasure":
-				_spawn_treasure(room, Vector3(0, 0, z))
-		z -= 16.0
+				_spawn_treasure(room, pos)
+			"boss":
+				_spawn_boss(room, pos)
+		_next_z -= 16.0
 
 
 func _fetch_stage_server(region: String, season: int, index_no: int) -> Dictionary:
@@ -193,11 +240,28 @@ func _fetch_stage_server(region: String, season: int, index_no: int) -> Dictiona
 func _room_done() -> void:
 	_pending -= 1
 	SaveData.save_now()
-	if _pending <= 0 and not _cleared:
-		_cleared = true
-		SaveData.set_region_cleared(REGION, SEASON)
+	if _pending <= 0 and not _stage_cleared:
+		_stage_cleared = true
 		Sfx.play("victory", -4.0)
-		_hud.show_banner("🏆 " + tr("region_cleared"), 3.5)
+		if _boss:
+			_hud.set_boss("", 0.0)
+			_boss = null
+		if _stage_index < _stage_count:
+			_advance_stage()
+		elif not _cleared:
+			_cleared = true
+			SaveData.set_region_cleared(_region, SEASON)
+			_hud.show_banner("🏆 " + tr("region_cleared"), 3.5)
+			SaveData.save_now()
+
+
+func _advance_stage() -> void:
+	_stage_index += 1
+	_stage_cleared = false
+	_hud.show_banner("➜ %d/%d" % [_stage_index, _stage_count], 1.6)
+	await get_tree().create_timer(1.4).timeout
+	# مرحلهٔ بعد جلوتر در همان جزیره ساخته می‌شود (راهرو ادامه دارد)
+	await _build_stage(_region, SEASON, _stage_index)
 
 
 func _spawn_gate(room: Dictionary, pos: Vector3) -> void:
@@ -224,6 +288,29 @@ func _spawn_battle(room: Dictionary, pos: Vector3) -> void:
 		w.position = pos + Vector3((i - n * 0.5 + 0.5) * 4.0, 1.4, -2.0)
 		_pending += 1
 		w.tree_exited.connect(func(): _room_done())
+
+
+func _spawn_boss(room: Dictionary, pos: Vector3) -> void:
+	var phases: Array = room.get("phases", [])
+	# ساخت فازها از موضوعات سرور اگر phases نبود (دادهٔ تطبیقی)
+	if phases.is_empty():
+		for tp in room.get("topics", []):
+			var g := TopicPuzzles.make_gate(str(tp), 0)
+			phases.append({"equation": g.get("challenge", "= ?"), "panels": g.get("panels", [])})
+	var cfg: Dictionary = room.get("boss_cfg", {}).duplicate()
+	if cfg.is_empty():
+		cfg = {"name_key": "boss_%s" % _region, "color": "7ecaff"}
+	_boss = Boss3D.create(phases, cfg)
+	add_child(_boss)
+	_boss.position = pos + Vector3(0, 0.2, -6.0)
+	_pending += 1
+	_hud.set_boss(_boss.boss_name, 1.0)
+	_boss.hp_changed.connect(func(h, m):
+		_hud.set_boss(_boss.boss_name, float(h) / float(m)))
+	_boss.boss_defeated.connect(func():
+		Sfx.play_music("ambient")
+		_room_done())
+	Sfx.play_music("boss")
 
 
 func _spawn_treasure(room: Dictionary, pos: Vector3) -> void:
