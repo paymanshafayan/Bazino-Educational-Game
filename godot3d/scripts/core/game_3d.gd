@@ -40,6 +40,9 @@ func _add(action: String, keys: Array) -> void:
 			InputMap.action_add_event(action, ev)
 
 
+var _auth_status: Label
+
+
 func _title() -> void:
 	var layer := CanvasLayer.new()
 	layer.name = "Title"
@@ -53,7 +56,7 @@ func _title() -> void:
 	title.add_theme_font_size_override("font_size", 56)
 	title.add_theme_color_override("font_color", Color("7ecaff"))
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.position = Vector2(290, 150)
+	title.position = Vector2(290, 110)
 	title.size = Vector2(700, 80)
 	layer.add_child(title)
 	var sub := Label.new()
@@ -61,18 +64,67 @@ func _title() -> void:
 	sub.add_theme_font_size_override("font_size", 20)
 	sub.add_theme_color_override("font_color", Color(1, 1, 1, 0.55))
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sub.position = Vector2(340, 250)
+	sub.position = Vector2(340, 205)
 	sub.size = Vector2(600, 40)
 	layer.add_child(sub)
+	# — ورود / مهمان (همان قرارداد Api دو‌بعدی) —
+	var email := LineEdit.new()
+	email.placeholder_text = "e-posta"
+	email.position = Vector2(490, 270)
+	email.size = Vector2(300, 36)
+	layer.add_child(email)
+	var passw := LineEdit.new()
+	passw.placeholder_text = "şifre"
+	passw.secret = true
+	passw.position = Vector2(490, 316)
+	passw.size = Vector2(300, 36)
+	layer.add_child(passw)
+	_auth_status = Label.new()
+	_auth_status.position = Vector2(490, 398)
+	_auth_status.size = Vector2(300, 30)
+	_auth_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_auth_status.text = "…"
+	layer.add_child(_auth_status)
+	var lb := Button.new()
+	lb.text = tr("ui_login")
+	lb.position = Vector2(490, 360)
+	lb.size = Vector2(145, 34)
+	lb.pressed.connect(_on_login.bind(email, passw))
+	layer.add_child(lb)
+	var gb := Button.new()
+	gb.text = tr("ui_offline")
+	gb.position = Vector2(645, 360)
+	gb.size = Vector2(145, 34)
+	gb.pressed.connect(func(): _auth_status.text = tr("ui_offline") + " ✓"; Sfx.play("click", -6.0))
+	layer.add_child(gb)
+	Api.login_finished.connect(_on_login_result)
+	_ping_status()
 	var btn := Button.new()
 	btn.text = "▶  " + tr("ui_play")
-	btn.custom_minimum_size = Vector2(200, 56)
-	btn.position = Vector2(540, 350)
+	btn.custom_minimum_size = Vector2(220, 60)
+	btn.position = Vector2(530, 480)
 	btn.pressed.connect(func():
 		Sfx.play("click", -5.0)
 		layer.queue_free()
 		_start_game())
 	layer.add_child(btn)
+
+
+func _ping_status() -> void:
+	var ok := await Api.ping()
+	if _auth_status and is_instance_valid(_auth_status):
+		_auth_status.text = ("🟢 %s" % (Api.base_url if Api.base_url != "" else "127.0.0.1")) if ok \
+			else ("🔴 " + tr("ui_offline"))
+
+
+func _on_login(email: LineEdit, passw: LineEdit) -> void:
+	Sfx.play("click", -6.0)
+	_auth_status.text = "…"
+	Api.login(email.text, passw.text)
+
+
+func _on_login_result(ok: bool, _d: Dictionary) -> void:
+	_auth_status.text = "🟢 ✓" if ok else "🔴 ✗"
 
 
 func _start_game() -> void:
@@ -89,12 +141,17 @@ func _start_game() -> void:
 	add_child(_hud)
 	_hud.setup(_player)
 	Sfx.play_music("ambient")
-	_build_stage(REGION, SEASON, 1)
+	await _build_stage(REGION, SEASON, 1)
 	_hud.show_banner("%s — %s" % [StageLoader.region_title(REGION), _stage_title])
 
 
 func _build_stage(region: String, season: int, index_no: int) -> void:
-	var stage := StageLoader.get_stage(region, season, index_no)
+	# ابتدا سرور (انطباق تطبیقی/adaptive)، بعد بازگشت به فایل محلی
+	var stage: Dictionary = {}
+	if Api.child_id > 0:
+		stage = await _fetch_stage_server(region, season, index_no)
+	if stage.is_empty():
+		stage = StageLoader.get_stage(region, season, index_no)
 	if stage.is_empty():
 		_hud.show_banner("⚠ stage not found")
 		return
@@ -113,6 +170,26 @@ func _build_stage(region: String, season: int, index_no: int) -> void:
 		z -= 16.0
 
 
+func _fetch_stage_server(region: String, season: int, index_no: int) -> Dictionary:
+	# واکشی با سقف زمانی: اگر سرور جواب نداد خالی برگردان (بازگشت آفلاین)
+	var done := false
+	var got: Dictionary = {}
+	var on_res := func(ok: bool, cfg: Dictionary):
+		done = true
+		if ok:
+			var inner: Dictionary = cfg.get("stage", cfg)
+			if inner.has("rooms"):
+				got = inner
+	if not Api.stage_finished.is_connected(on_res):
+		Api.stage_finished.connect(on_res, CONNECT_ONE_SHOT)
+	Api.fetch_stage(region, season, index_no)
+	var waited := 0.0
+	while not done and waited < 3.0:
+		await get_tree().create_timer(0.1).timeout
+		waited += 0.1
+	return got
+
+
 func _room_done() -> void:
 	_pending -= 1
 	SaveData.save_now()
@@ -124,7 +201,12 @@ func _room_done() -> void:
 
 
 func _spawn_gate(room: Dictionary, pos: Vector3) -> void:
-	var gate := RuneGate.create(room.get("gate", {}))
+	var cfg: Dictionary = room.get("gate", {})
+	if cfg.is_empty() and room.has("topic_id"):
+		# اتاق تطبیقی سرور: موضوع → پازل زنده (با پرچم reinjection یادگیری پنهان)
+		cfg = TopicPuzzles.make_gate(
+			str(room.get("topic_id", "")), int(room.get("ref_time_ms", 0)))
+	var gate := RuneGate.create(cfg)
 	add_child(gate)
 	gate.position = pos
 	_pending += 1
@@ -145,7 +227,11 @@ func _spawn_battle(room: Dictionary, pos: Vector3) -> void:
 
 
 func _spawn_treasure(room: Dictionary, pos: Vector3) -> void:
-	var t := Treasure3D.create(str(room.get("tool_id", "")), str(room.get("topic_id", "")))
+	var tool_id := str(room.get("tool_id", ""))
+	var topic := str(room.get("topic_id", ""))
+	if tool_id == "" and topic != "":
+		tool_id = TopicPuzzles.tool_for(topic)
+	var t := Treasure3D.create(tool_id, topic)
 	add_child(t)
 	t.position = pos
 	_pending += 1
