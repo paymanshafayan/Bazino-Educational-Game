@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bazino — پنل گیم‌نت</title>
+<style>
+  :root{--bg:#0b0e1a;--card:#131a2e;--fg:#e8ecff;--acc:#57d6ff;--ok:#9dff70;--warn:#ffd166;}
+  *{box-sizing:border-box;font-family:Tahoma,system-ui,sans-serif}
+  body{margin:0;background:var(--bg);color:var(--fg);padding:20px}
+  h1{font-size:22px;color:var(--acc)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .card{background:var(--card);border-radius:14px;padding:16px}
+  input,button{padding:9px 12px;border-radius:9px;border:1px solid #2a3557;background:#0d1326;color:var(--fg);width:100%;margin:4px 0}
+  button{background:var(--acc);color:#04202f;border:0;font-weight:bold;cursor:pointer}
+  button:disabled{opacity:.4}
+  .ok{color:var(--ok)} .warn{color:var(--warn)}
+  img#qr{width:160px;height:160px;background:#fff;border-radius:10px}
+  pre{white-space:pre-wrap;max-height:220px;overflow:auto;background:#0a0f22;padding:10px;border-radius:10px;font-size:12px}
+</style>
+</head>
+<body>
+<h1>🎮 Bazino — پنل باجهٔ گیم‌نت</h1>
+
+<div class="grid" id="loginCard" style="max-width:420px">
+  <div class="card">
+    <h3>ورود پرسنل</h3>
+    <input id="email" placeholder="staff@bazino.local">
+    <input id="pass" type="password" placeholder="رمز">
+    <button onclick="login()">ورود</button>
+    <div id="loginMsg"></div>
+  </div>
+</div>
+
+<div class="grid" id="panel" style="display:none">
+  <div class="card">
+    <h3>📊 شاخص‌ها</h3><pre id="stats">…</pre>
+  </div>
+
+  <div class="card">
+    <h3>💵 شارژ حضوری کیف‌پول (نقدی)</h3>
+    <input id="pid" type="number" placeholder="شناسهٔ والد (parent_id)">
+    <input id="amount" type="number" placeholder="مبلغ به لیرا">
+    <input id="note" placeholder="یادداشت">
+    <button onclick="topup()">شارژ + رسید</button>
+    <div id="topupMsg"></div>
+  </div>
+
+  <div class="card">
+    <h3>⚑ کد امروز سالن</h3>
+    <button onclick="issue()">صدور کد روزانه</button>
+    <div id="venueMsg"></div>
+    <img id="qr" style="display:none" alt="QR">
+  </div>
+
+  <div class="card">
+    <h3>🏆 کدهای تحویل جوایز</h3>
+    <button onclick="reds()">به‌روزرسانی</button>
+    <pre id="redPre">…</pre>
+  </div>
+
+  <div class="card">
+    <h3>🧾 تراکنش‌ها</h3>
+    <button onclick="txs()">به‌روزرسانی</button>
+    <pre id="txPre">…</pre>
+  </div>
+</div>
+
+<script>
+let T = localStorage.getItem("bz_staff_token") || "";
+const H = () => ({"Content-Type":"application/json","Authorization":"Bearer "+T});
+
+async function login(){
+  const r = await fetch("/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email:email.value,password:pass.value})});
+  if(!r.ok){ loginMsg.textContent="✗ ناموفق"; loginMsg.className="warn"; return; }
+  T = (await r.json()).access_token;
+  localStorage.setItem("bz_staff_token", T);
+  boot();
+}
+
+async function j(path, opt={}){
+  const r = await fetch(path,{...opt, headers:H()});
+  if(r.status===401){ logout(); throw new Error("unauth"); }
+  return r.json();
+}
+async function jimg(path){
+  const r = await fetch(path,{headers:H()});
+  const b = await r.blob();
+  return URL.createObjectURL(b);
+}
+function logout(){ localStorage.removeItem("bz_staff_token"); T=""; location.reload(); }
+
+async function boot(){
+  if(!T) return;
+  loginCard.style.display="none";
+  panel.style.display="grid";
+  stats.textContent = JSON.stringify(await j("/admin/stats"),null,1);
+}
+
+async function topup(){
+  const req = "pos-"+Date.now();
+  try{
+    const t = await j("/wallet/topup_cash",{method:"POST",
+      body:JSON.stringify({parent_id:+pid.value, amount_kurus:Math.round(amount.value*100),
+        request_id:req, note:note.value})});
+    topupMsg.innerHTML = `✔ رسید: <b class="ok">${t.ref_code}</b> — مبلغ ${t.amount_kurus/100} لیرا`;
+    stats.textContent = JSON.stringify(await j("/admin/stats"),null,1);
+  }catch(e){ topupMsg.innerHTML="✗ خطا (شناسهٔ والد؟)"; topupMsg.className="warn"; }
+}
+
+async function issue(){
+  const v = await j("/venue/issue",{method:"POST",body:JSON.stringify({venue_name:"Bazino GameNet"})});
+  venueMsg.innerHTML = `کد: <b class="ok" style="font-size:26px">${v.code}</b>`;
+  qr.src = await jimg("/venue/qr/"+v.code);
+  qr.style.display="block";
+}
+
+async function reds(){ redPre.textContent = JSON.stringify(await j("/admin/redemptions"),null,1); }
+async function txs(){ txPre.textContent = JSON.stringify(await j("/admin/transactions"),null,1); }
+
+window.login=login; window.topup=topup; window.issue=issue; window.reds=reds; window.txs=txs;
+boot();
+</script>
+</body>
+</html>

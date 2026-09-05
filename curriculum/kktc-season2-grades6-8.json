@@ -1,0 +1,29 @@
+{
+  "version": "2026-bahar-draft1",
+  "meta": {
+    "season": 2,
+    "semester": "bahar",
+    "period": "Şubat – Haziran 2027",
+    "grades": [6, 7, 8],
+    "note": "پیش‌نویس اولیه بر اساس مکمل‌های پایه ۸ از کتاب‌چهٔ رسمی آزمون (نیمسال دوم آن قطعی؛ semester_estimate=true تا تطبیق با پخش سالانهٔ Öğretim Programı در payroll نهایی فاز ۶)."
+  },
+  "topics": [
+    {"id": "math.g8.bahar.dogrusal", "subject": "math", "grade": 8, "semester": "bahar", "unit": "Cebir", "name_tr": "Doğrusal İlişki ve Denklemler", "name_en": "Linear Relations and Equations", "name_fa": "رابطهٔ خطی و معادله‌ها", "source_url": "https://mebnet.net (2026 Yerleştirme kitapçığı)", "semester_estimate": true},
+    {"id": "math.g8.bahar.egim", "subject": "math", "grade": 8, "semester": "bahar", "unit": "Geometri-Analitik", "name_tr": "Eğim - Eşitsizlikler", "name_en": "Slope - Inequalities", "name_fa": "شیب — نامعادله‌ها", "source_url": "https://mebnet.net (2026 kitapçığı)", "semester_estimate": true},
+    {"id": "math.g8.bahar.ucgenler", "subject": "math", "grade": 8, "semester": "bahar", "unit": "Geometri", "name_tr": "Üçgenler ve Eşlik-Benzerlik", "name_en": "Triangles and Congruence-Similarity", "name_fa": "مثلث‌ها و هم‌نهشتی-تشابه", "source_url": "https://mebnet.net (2026 kitapçığı)", "semester_estimate": true},
+    {"id": "math.g8.bahar.donusum", "subject": "math", "grade": 8, "semester": "bahar", "unit": "Geometri", "name_tr": "Dönüşüm Geometrisi - Geometrik Cisimler", "name_en": "Transformation Geometry - Solids", "name_fa": "هندسهٔ تبدیلی — جسم‌های هندسی", "source_url": "https://mebnet.net (2026 kitapçığı)", "semester_estimate": true},
+    {"id": "math.g8.bahar.veri", "subject": "math", "grade": 8, "semester": "bahar", "unit": "Veri", "name_tr": "Veri Analizi ve Olasılık", "name_en": "Data Analysis and Probability", "name_fa": "تحلیل داده و احتمال", "source_url": "https://mebnet.net (2026 kitapçığı)", "semester_estimate": true},
+
+    {"id": "biology.g8.bahar.hucre-bolunmesi", "subject": "biology", "grade": 8, "semester": "bahar", "unit": "Hücre", "name_tr": "Hücre Bölünmesi ve Kalıtım", "name_en": "Cell Division and Heredity", "name_fa": "تقسیم سلول و وراثت", "source_url": "https://mebnet.net (kitapçık Ünite 5)", "semester_estimate": true},
+    {"id": "chemistry.g8.bahar.madde-isi", "subject": "chemistry", "grade": 8, "semester": "bahar", "unit": "Madde", "name_tr": "Madde ve Isı - Asitler ve Bazlar", "name_en": "Matter and Heat - Acids and Bases", "name_fa": "ماده و گرما — اسیدها و بازها", "source_url": "https://mebnet.net (kitapçık Ünite 6)", "semester_estimate": true},
+    {"id": "physics.g8.bahar.enerji", "subject": "physics", "grade": 8, "semester": "bahar", "unit": "Enerji", "name_tr": "Enerji dönüşümleri ve Çevre", "name_en": "Energy Transformations and Environment", "name_fa": "تبدیل انرژی و محیط‌زیست", "source_url": "https://mebnet.net (kitapçık Ünite 7)", "semester_estimate": true},
+    {"id": "physics.g8.bahar.yer-hava", "subject": "physics", "grade": 8, "semester": "bahar", "unit": "Yeryüzü", "name_tr": "Yeryüzü ve Hava Durumu", "name_en": "Earth and Weather", "name_fa": "زمین و هوا", "source_url": "https://mebnet.net (kitapçık Ünite 8)", "semester_estimate": true},
+    {"id": "english.g8.bahar.past-simple", "subject": "english", "grade": 8, "semester": "bahar", "unit": "Grammar (Kitapçık)", "name_tr": "Past Simple Tense", "name_en": "Past Simple Tense", "name_fa": "گذشتهٔ ساده", "source_url": "https://mebnet.net (2026 kitapçığı)", "semester_estimate": true},
+    {"id": "english.g8.bahar.comparison", "subject": "english", "grade": 8, "semester": "bahar", "unit": "Grammar (Kitapçık)", "name_tr": "Comparatives & Superlatives", "name_en": "Comparatives & Superlatives", "name_fa": "تفویض و ممتازه", "source_url": "https://mebnet.net (2026 kitapçığı)", "semester_estimate": true},
+    {"id": "english.g8.bahar.future", "subject": "english", "grade": 8, "semester": "bahar", "unit": "Grammar (Kitapçık)", "name_tr": "Future (be going to / will)", "name_en": "Future (be going to / will)", "name_fa": "آینده", "source_url": "https://mebnet.net (2026 kitapçığı)", "semester_estimate": true},
+    {"id": "english.g8.bahar.prepositions-clauses", "subject": "english", "grade": 8, "semester": "bahar", "unit": "Grammar (Kitapçık)", "name_tr": "Prepositions durum/zaman - Reason/result conjunctions", "name_en": "Prepositions - Reason/result conjunctions", "name_fa": "حروف اضافه — پیوندهای علت/نتایج", "source_url": "https://mebnet.net (2026 kitapçığı)", "semester_estimate": true},
+
+    {"id": "ict.g8.bahar.programlama", "subject": "ict", "grade": 8, "semester": "bahar", "unit": "Programlama", "name_tr": "Programlamanın Temelleri", "name_en": "Fundamentals of Programming", "name_fa": "مبانی برنامه‌نویسی", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "logic.g8.bahar.algoritmik", "subject": "logic", "grade": 8, "semester": "bahar", "unit": "Algoritmik Mantık", "name_tr": "Akıl yürütme oyunları", "name_en": "Reasoning games", "name_fa": "بازی‌های استدلال", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true}
+  ]
+}

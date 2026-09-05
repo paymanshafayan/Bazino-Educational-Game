@@ -1,0 +1,29 @@
+{
+  "region": "chemistry",
+  "season": 2,
+  "stages": [
+    {"index_no": 1, "free": true, "title_key": "season_2_teaser",
+     "rooms": [
+       {"type": "obstacle", "gate": {"topic_id": "chemistry.g8.bahar.madde-isi",
+         "kind": "value_panel", "challenge": "Buz eridi: madde ısı ?",
+         "panels": [{"v": "aldı", "ok": true}, {"v": "verdi", "ok": false},
+                    {"v": "aldı+verdi", "ok": false}, {"v": "alışveriş yok", "ok": false}],
+         "time_limit": 12}},
+       {"type": "battle", "enemies": 3, "enemy_theme": "number_wisp"},
+       {"type": "boss", "boss_cfg": {"name_key": "boss_ph",
+         "topic_prefix": "chemistry.g8.bahar",
+         "topic_suffixes": ["madde-isi", "madde-isi", "madde-isi"], "color": "b48aff"},
+        "phases": [
+          {"equation": "Kaynama: sıcaklık sabit kalırken enerji ?",
+           "panels": [{"v": "hâl değişimine gider", "ok": true}, {"v": "hız yükselir", "ok": false},
+                      {"v": "ısı yok", "ok": false}, {"v": "donar", "ok": false}]},
+          {"equation": "Asit tadı? (güvenli bilgi)",
+           "panels": [{"v": "ekşi", "ok": true}, {"v": "tatlı", "ok": false},
+                      {"v": "tuzlu", "ok": false}, {"v": "acı", "ok": false}]},
+          {"equation": "Antasit (mide ilacı) ne yapar?",
+           "panels": [{"v": "asidi nötrler", "ok": true}, {"v": "baz üretir", "ok": false},
+                      {"v": "asit üretir", "ok": false}, {"v": "ısırır", "ok": false}]}
+        ]}
+     ]}
+  ]
+}

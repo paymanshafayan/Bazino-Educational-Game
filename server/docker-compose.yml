@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: bazino
+      POSTGRES_PASSWORD: bazino
+      POSTGRES_DB: bazino
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+  api:
+    build: .
+    depends_on: [db]
+    environment:
+      DATABASE_URL: postgresql+psycopg://bazino:bazino@db:5432/bazino
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+      GATEWAY_PROVIDER: manual
+    ports: ["8000:8000"]
+  pgweb:
+    image: sosedoff/pgweb
+    depends_on: [db]
+    profiles: ["tools"]
+    environment:
+      DATABASE_URL: postgres://bazino:bazino@db:5432/bazino?sslmode=disable
+    ports: ["8081:8081"]
+volumes:
+  pgdata:

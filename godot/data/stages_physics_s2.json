@@ -1,0 +1,29 @@
+{
+  "region": "physics",
+  "season": 2,
+  "stages": [
+    {"index_no": 1, "free": true, "title_key": "season_2_teaser",
+     "rooms": [
+       {"type": "obstacle", "gate": {"topic_id": "physics.g8.bahar.enerji",
+         "kind": "value_panel", "challenge": "Güneş paneli: ışık → ?",
+         "panels": [{"v": "elektrik", "ok": true}, {"v": "ısı", "ok": false},
+                    {"v": "ses", "ok": false}, {"v": "potansiyel", "ok": false}],
+         "time_limit": 12}},
+       {"type": "battle", "enemies": 4, "enemy_theme": "number_wisp"},
+       {"type": "boss", "boss_cfg": {"name_key": "boss_trafo",
+         "topic_prefix": "physics.g8.bahar",
+         "topic_suffixes": ["enerji", "yer-hava", "enerji"], "color": "7ecaff"},
+        "phases": [
+          {"equation": "Baraj: su yukarıda → potansiyel → ?",
+           "panels": [{"v": "kinetik", "ok": true}, {"v": "kütle", "ok": false},
+                      {"v": "ışık", "ok": false}, {"v": "basınç yok", "ok": false}]},
+          {"equation": "Isınma: hava soğur → hacmi ?",
+           "panels": [{"v": "küçülür", "ok": true}, {"v": "büyür", "ok": false},
+                      {"v": "sabit", "ok": false}, {"v": "gaz olur", "ok": false}]},
+          {"equation": "Rüzgâr enerjisinin kaynağı?",
+           "panels": [{"v": "güneş", "ok": true}, {"v": "yerçekimi", "ok": false},
+                      {"v": "yağmur", "ok": false}, {"v": "buharlaşma", "ok": false}]}
+        ]}
+     ]}
+  ]
+}
