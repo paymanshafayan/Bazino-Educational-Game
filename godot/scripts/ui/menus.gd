@@ -33,6 +33,22 @@ func _ready() -> void:
 
 
 func _build() -> void:
+	# صف نمایهٔ عنوان نقاشانه
+	var tpath := "res://assets/bg/title.png"
+	var tex: Texture2D = load(tpath)
+	if tex:
+		var bg := TextureRect.new()
+		bg.texture = tex
+		bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		bg.modulate = Color(0.85, 0.87, 1.0)
+		add_child(bg)
+		var veil := ColorRect.new()
+		veil.color = Color(0.02, 0.03, 0.07, 0.5)
+		veil.set_anchors_preset(Control.PRESET_FULL_RECT)
+		add_child(veil)
+		move_child(bg, 0)
+		move_child(veil, 1)
 	var col := VBoxContainer.new()
 	col.set_anchors_preset(Control.PRESET_CENTER)
 	col.custom_minimum_size = Vector2(520, 0)

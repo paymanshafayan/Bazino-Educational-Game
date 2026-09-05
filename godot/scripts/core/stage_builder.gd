@@ -14,10 +14,12 @@ var player: Player
 var camera: GameCamera
 
 var _total_w := 4000.0
+var _region := "math"
 
 
 func build(stage_data: Dictionary) -> void:
 	var rooms: Array = stage_data.get("rooms", [])
+	_region = str(stage_data.get("region", "math")).strip_edges()
 	_total_w = (rooms.size() + 2) * ROOM_W
 	_make_background()
 	_make_ground()
@@ -31,6 +33,43 @@ func _make_background() -> void:
 	back.name = "Background"
 	back.z_index = -10
 	add_child(back)
+	var bg_path := "res://assets/bg/%s.png" % _region
+	if ResourceLoader.exists(bg_path):
+		# صف نمایشی نقاشانه + پارالاکس دور/نزدیک برای حس عمق
+		var base := Polygon2D.new()
+		base.color = Color("0b0e1a")
+		base.polygon = PackedVector2Array([
+			Vector2(-400, -400), Vector2(_total_w + 800, -400),
+			Vector2(_total_w + 800, GROUND_Y), Vector2(-400, GROUND_Y)])
+		back.add_child(base)
+		var tex: Texture2D = load(bg_path)
+		var pb := ParallaxBackground.new()
+		back.add_child(pb)
+		var far := ParallaxLayer.new()
+		far.motion_scale = Vector2(0.2, 0.45)
+		far.motion_mirroring = Vector2(tex.get_width() * 2.0, 0)
+		pb.add_child(far)
+		for k in 3:
+			var sp := Sprite2D.new()
+			sp.texture = tex
+			sp.centered = false
+			sp.scale = Vector2(2.0, 2.0)
+			sp.position = Vector2(k * tex.get_width() * 2.0, -140)
+			sp.modulate = Color(0.9, 0.92, 1.05)
+			far.add_child(sp)
+		var near := ParallaxLayer.new()
+		near.motion_scale = Vector2(0.5, 0.75)
+		near.motion_mirroring = Vector2(tex.get_width() * 3.0, 0)
+		pb.add_child(near)
+		for m in 3:
+			var sp2 := Sprite2D.new()
+			sp2.texture = tex
+			sp2.centered = false
+			sp2.scale = Vector2(3.0, 3.0)
+			sp2.position = Vector2(m * tex.get_width() * 3.0, -80)
+			sp2.modulate = Color(0.30, 0.34, 0.5, 0.45)
+			near.add_child(sp2)
+		return
 	var sky := Polygon2D.new()
 	sky.color = Color("0b0e1a")
 	sky.polygon = PackedVector2Array([
