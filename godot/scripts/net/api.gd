@@ -47,7 +47,7 @@ func _request(method: int, path: String, payload: Dictionary = {}) -> Dictionary
 		"body": data if data is Dictionary else {"data": data}}
 
 
-func _get(path: String) -> Dictionary:
+func _http_get(path: String) -> Dictionary:
 	return await _request(HTTPClient.METHOD_GET, path)
 
 
@@ -56,7 +56,7 @@ func _post(path: String, payload: Dictionary) -> Dictionary:
 
 
 func ping() -> bool:
-	var r: Dictionary = await _get("/health")
+	var r: Dictionary = await _http_get("/health")
 	return r.ok
 
 
@@ -71,7 +71,7 @@ func login(email: String, password: String) -> void:
 
 
 func fetch_player_info() -> void:
-	var r: Dictionary = await _get("/auth/me/player")
+	var r: Dictionary = await _http_get("/auth/me/player")
 	if r.ok:
 		child_id = int(r.body.get("child_id", 0))
 	player_info_finished.emit(r.ok, r.body)
@@ -80,7 +80,7 @@ func fetch_player_info() -> void:
 func fetch_stage(region: String, season: int, index_no: int) -> void:
 	var path := "/adaptive/stage/%d?region=%s&season=%d&index_no=%d" % [
 		child_id, region, season, index_no]
-	var r: Dictionary = await _get(path)
+	var r: Dictionary = await _http_get(path)
 	stage_finished.emit(r.ok, r.body)
 
 
@@ -113,7 +113,7 @@ func join_venue(code: String) -> void:
 
 ## قهرمان تورنمنت: کد جایزهٔ بزرگ فصل را می‌گیرد (در باجهٔ سالن تحویل می‌شود)
 func claim_grand_reward() -> void:
-	var cat: Dictionary = await _get("/rewards/catalog")
+	var cat: Dictionary = await _http_get("/rewards/catalog")
 	if not cat.ok:
 		reward_finished.emit(false, {})
 		return
