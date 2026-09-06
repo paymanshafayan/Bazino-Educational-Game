@@ -21,6 +21,7 @@ func build(accent_hex: String = "8df7c9", ground_hex: String = "16203a",
 	_make_ground(ground_hex)
 	_make_scatter()
 	_make_beacon()
+	_make_ambient()
 
 
 func _make_environment() -> void:
@@ -149,3 +150,29 @@ func _make_beacon() -> void:
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tw.tween_property(star, "position:y", 11.0, 2.2)\
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func _make_ambient() -> void:
+	# ذرات غبار جادویی شناور در کل راهرو (حس زنده‌بودن جزیره)
+	var p := GPUParticles3D.new()
+	p.amount = 220
+	p.lifetime = 7.0
+	p.emitting = true
+	var pm := ParticleProcessMaterial.new()
+	pm.direction = Vector3(0, 1, 0)
+	pm.spread = 35.0
+	pm.initial_velocity_min = 0.15
+	pm.initial_velocity_max = 0.5
+	pm.gravity = Vector3.ZERO
+	pm.scale_min = 0.03
+	pm.scale_max = 0.09
+	pm.color = accent.lightened(0.2)
+	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+	pm.emission_box_extents = Vector3(width * 0.5, 2.5, length * 0.5)
+	p.process_material = pm
+	var mesh := SphereMesh.new()
+	mesh.radius = 0.04
+	mesh.height = 0.08
+	p.draw_pass_1 = mesh
+	add_child(p)
+	p.position = Vector3(0, 2.0, -length * 0.5)

@@ -172,6 +172,7 @@ func _die() -> void:
 	if _player and is_instance_valid(_player):
 		_player.collect_lum(LUM_DROP)
 	Telemetry.track("enemy_defeated", "", {"type": "spitter", "dim": 3})
+	Fx.burst(get_parent(), global_position + Vector3(0, 2.0, 0), _theme.to_html(false), 24)
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(self, "position:y", position.y + 2.5, 0.5)
 	tw.tween_property(self, "scale", Vector3.ZERO, 0.5)

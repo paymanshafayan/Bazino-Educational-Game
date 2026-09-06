@@ -114,6 +114,11 @@ func _tick_timers(delta: float) -> void:
 	if is_on_floor():
 		if _air:
 			Sfx.play("land", -5.0)
+			if mesh_root:
+				mesh_root.scale = Vector3(1.18, 0.72, 1.18)
+				var tw := create_tween()
+				tw.tween_property(mesh_root, "scale", Vector3.ONE, 0.18)\
+					.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		_air = false
 		_coyote = COYOTE_TIME
 	else:
@@ -161,6 +166,7 @@ func _dash(move: Vector3) -> void:
 		_dash_cd = DASH_COOLDOWN
 		_iframes = maxf(_iframes, DASH_IFRAMES)
 		Sfx.play("dash", -2.0)
+		Fx.cam_fov_kick(get_tree(), 9.0)
 		_dust()
 
 
@@ -190,6 +196,8 @@ func _strike_area() -> void:
 		off.y = 0.0
 		if off.length() <= 2.2 and facing.angle_to(off.normalized()) < 1.2:
 			body.take_damage(1, global_position + facing)
+			Fx.burst(self, body.global_position + Vector3(0, 1.2, 0), "ffffff", 12, false)
+			Fx.hitstop(get_tree(), 55)
 
 
 func _update_facing(move: Vector3, delta: float) -> void:
@@ -231,6 +239,7 @@ func take_damage(amount: int, from_pos: Vector3) -> void:
 	hp -= amount
 	_iframes = HURT_IFRAMES
 	Sfx.play("hurt", -3.0)
+	Fx.cam_shake(get_tree(), 0.4)
 	var away := (global_position - from_pos)
 	away.y = 0.0
 	if away.length_squared() < 0.001:

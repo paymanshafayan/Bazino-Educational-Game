@@ -98,6 +98,7 @@ func _die() -> void:
 	died.emit()
 	SaveData.add_lum(3)
 	Telemetry.track("enemy_down", "", {"dim": 3})
+	Fx.burst(get_parent(), global_position, body_color.to_html(false), 20)
 	var tw := create_tween()
 	tw.tween_property(_mesh, "scale", Vector3(0.0, 1.8, 0.0), 0.35)
 	tw.tween_callback(queue_free)

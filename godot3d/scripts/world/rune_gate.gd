@@ -229,6 +229,8 @@ func _open(player: Player3D) -> void:
 	_resolved = true
 	_wall.set_deferred("collision_layer", 0)
 	_wall.set_deferred("collision_mask", 0)
+	Fx.burst(self, global_position + Vector3(0, 3.0, 0), "8df7c9", 30)
+	Fx.cam_shake(get_tree(), 0.18)
 	var tw := create_tween()
 	tw.tween_property(self, "position:y", -WALL_H - 2.0, 0.9)\
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)

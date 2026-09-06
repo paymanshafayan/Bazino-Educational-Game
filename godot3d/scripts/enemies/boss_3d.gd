@@ -296,6 +296,9 @@ func _break_shield() -> void:
 	_shield_mesh.visible = false
 	_clear_panels()
 	Sfx.play("phase_break", -2.0)
+	Fx.burst(self, global_position + Vector3(0, 3.0, 0), "59d6ff", 36)
+	Fx.cam_shake(get_tree(), 0.55)
+	Fx.hitstop(get_tree(), 110)
 	Telemetry.track("boss_phase_break", _phase_topic(),
 		{"dim": 3, "phase": _phase, "retries": _phase_retries, "time_s": PHASE_TIME - _phase_left})
 	if _player:
@@ -360,6 +363,8 @@ func _win() -> void:
 	Telemetry.track("boss_defeated", _phase_topic(), {"dim": 3, "boss": name_key})
 	if _player:
 		_player.collect_lum(40)
+	Fx.burst(get_parent(), global_position + Vector3(0, 2.5, 0), "ffd166", 48)
+	Fx.cam_shake(get_tree(), 0.6)
 	boss_defeated.emit()
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(self, "position:y", position.y - 3.0, 1.6)

@@ -143,6 +143,8 @@ func _die() -> void:
 	if _player and is_instance_valid(_player):
 		_player.collect_lum(LUM_DROP)
 	Telemetry.track("enemy_defeated", "", {"type": "golem", "dim": 3})
+	Fx.burst(get_parent(), global_position + Vector3(0, 1.0, 0), _theme.to_html(false), 24)
+	Fx.cam_shake(get_tree(), 0.15)
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(self, "rotation:x", -PI * 0.5, 0.4)
 	tw.tween_property(self, "scale", Vector3.ZERO, 0.55)
