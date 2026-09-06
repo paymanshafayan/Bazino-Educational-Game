@@ -59,7 +59,22 @@ func _ready() -> void:
 	if boss_name == name_key:
 		boss_name = name_key.trim_prefix("boss_")
 	_build_body()
+	_maybe_upgrade_model()
 	_player = get_tree().get_first_node_in_group("player")
+
+
+func _maybe_upgrade_model() -> void:
+	if not ModelBank.has("boss"):
+		return
+	var pair := ModelBank.instantiate_animated("boss")
+	if pair[0] == null:
+		return
+	ModelBank.normalize_height(pair[0], 3.6)
+	add_child(pair[0])
+	# فقط بدنه/سر fallback پنهان شود؛ سپر و تابلوی معادله فعال می‌ماند
+	_body_mesh.visible = false
+	if pair[1]:
+		ModelBank.autoplay_movement(pair[1])
 	_start_phase(0)
 	if _player and _player.has_signal("died"):
 		pass

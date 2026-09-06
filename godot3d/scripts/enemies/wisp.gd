@@ -12,6 +12,8 @@ var hp := 2
 var body_color: Color = Color("59d6ff")
 var _t := 0.0
 var _mesh: MeshInstance3D
+var _visual: Node3D   # کپسول fallback یا مدل پک — هدف افکت‌ها
+var _vbase := Vector3.ONE
 
 
 static func create(theme_color: String = "59d6ff") -> Wisp3D:
@@ -22,7 +24,6 @@ static func create(theme_color: String = "59d6ff") -> Wisp3D:
 
 func _ready() -> void:
 	add_to_group("damageable")
-	add_to_group("wisp")
 	collision_layer = 4
 	collision_mask = 1 | 2
 	_mesh = MeshInstance3D.new()
@@ -47,6 +48,25 @@ func _ready() -> void:
 	col.position = Vector3(0, HOVER_H * 0.5, 0)
 	add_child(col)
 	_mesh.position = Vector3(0, HOVER_H * 0.5, 0)
+	_visual = _mesh
+	_maybe_upgrade_model()
+
+
+func _maybe_upgrade_model() -> void:
+	# مدل واقعی هیولا از پک‌ها — در نبودش، همان کپسول نئون باقی می‌ماند
+	if not ModelBank.has("wisp"):
+		return
+	var pair := ModelBank.instantiate_animated("wisp")
+	if pair[0] == null:
+		return
+	ModelBank.normalize_height(pair[0], 1.3)
+	var m: Node3D = pair[0]
+	add_child(m)
+	_mesh.visible = false
+	_visual = m
+	_vbase = m.scale
+	if pair[1]:
+		ModelBank.autoplay_movement(pair[1])
 
 
 func _physics_process(delta: float) -> void:
@@ -64,7 +84,7 @@ func _physics_process(delta: float) -> void:
 	velocity.y = -(velocity.y) * 0.9  # نگهداشت ارتفاع تقریبی
 	velocity.y += (sin(_t * 2.2) * 0.4 - velocity.y) * 0.25
 	move_and_slide()
-	_mesh.position.y = HOVER_H * 0.5 + sin(_t * 2.6) * 0.15
+	_visual.position.y = HOVER_H * 0.5 + sin(_t * 2.6) * 0.15
 	# تماسی با بازیکن = آسیب سبک
 	for i in get_slide_collision_count():
 		var c := get_slide_collision(i)
@@ -84,8 +104,8 @@ func take_damage(amount: int, from_pos: Vector3) -> void:
 	hp -= amount
 	Sfx.play("hurt", -6.0, 1.4)
 	var tw := create_tween()
-	tw.tween_property(_mesh, "scale", Vector3(1.3, 0.8, 1.3), 0.06)
-	tw.tween_property(_mesh, "scale", Vector3.ONE, 0.12)
+	tw.tween_property(_visual, "scale", _vbase * Vector3(1.3, 0.8, 1.3), 0.06)
+	tw.tween_property(_visual, "scale", _vbase, 0.12)
 	var away := global_position - from_pos
 	away.y = 0.0
 	velocity += away.normalized() * 4.0
@@ -100,5 +120,5 @@ func _die() -> void:
 	Telemetry.track("enemy_down", "", {"dim": 3})
 	Fx.burst(get_parent(), global_position, body_color.to_html(false), 20)
 	var tw := create_tween()
-	tw.tween_property(_mesh, "scale", Vector3(0.0, 1.8, 0.0), 0.35)
+	tw.tween_property(_visual, "scale", Vector3(0.0, 1.8, 0.0), 0.35)
 	tw.tween_callback(queue_free)

@@ -87,8 +87,40 @@ func _make_ground(ground_hex: String) -> void:
 		add_child(rail)
 
 
+func _make_nature_props() -> void:
+	# درخت/سنگ واقعی پک‌های Quaternius در لبهٔ راهرو (در نبودش scatter کدی باقی است)
+	var tree := ModelBank.instantiate_static("tree")
+	var rock := ModelBank.instantiate_static("rock")
+	var bush := ModelBank.instantiate_static("bush")
+	if tree == null and rock == null:
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7
+	var slots := int(length / 9.0)
+	for i in slots:
+		var src: Node3D = null
+		var roll := rng.randf()
+		if roll < 0.45 and tree:
+			src = tree.duplicate()
+		elif roll < 0.8 and rock:
+			src = rock.duplicate()
+		elif bush:
+			src = bush.duplicate()
+		else:
+			continue
+		var side := 1.0 if rng.randf() > 0.5 else -1.0
+		src.position = Vector3(
+			side * rng.randf_range(width * 0.5 + 2.5, width * 0.5 + 9.0),
+			0.0, rng.randf_range(16.0, -length))
+		src.rotation.y = rng.randf_range(0.0, TAU)
+		var s := rng.randf_range(2.2, 3.4)
+		src.scale = Vector3.ONE * s
+		add_child(src)
+
+
 func _make_scatter() -> void:
 	# سنگ‌ها و کریستال‌های درخشان پراکنده (placeholder تا ورود پک‌های محیط)
+	_make_nature_props()
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 42
 	var count := int(length / 14.0)

@@ -28,7 +28,22 @@ static func create(theme_color: String = "c792ea") -> Spitter3D:
 func _ready() -> void:
 	add_to_group("damageable")
 	_build_visual()
+	_maybe_upgrade_model()
 	_player = get_tree().get_first_node_in_group("player")
+
+
+func _maybe_upgrade_model() -> void:
+	if not ModelBank.has("spitter"):
+		return
+	var pair := ModelBank.instantiate_animated("spitter")
+	if pair[0] == null:
+		return
+	ModelBank.normalize_height(pair[0], 1.7)
+	(pair[0] as Node3D).position = Vector3(0, HOVER_Y - 0.8, 0)
+	add_child(pair[0])
+	ModelBank.hide_child_meshes(self)
+	if pair[1]:
+		ModelBank.autoplay_movement(pair[1])
 
 
 func _build_visual() -> void:

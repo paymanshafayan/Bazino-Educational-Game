@@ -51,6 +51,7 @@ func _ready() -> void:
 	collision_layer = 2
 	collision_mask = 1 | 4 | 8
 	_build_visual_fallback()
+	try_upgrade_model()
 
 
 func _build_visual_fallback() -> void:
@@ -90,6 +91,35 @@ func node_ready_with_model(model: Node3D, anims: AnimationPlayer) -> void:
 	mesh_root.add_child(model)
 
 
+## در _ready فراخوانی شود: تلاش برای تعویض خودکار با پک‌های دانلودی
+func try_upgrade_model() -> void:
+	if not ModelBank.has("player"):
+		return
+	var pair := ModelBank.instantiate_animated("player")
+	if pair[0] == null:
+		return
+	ModelBank.normalize_height(pair[0], 1.8)
+	node_ready_with_model(pair[0], pair[1])
+
+
+func _anim_tick() -> void:
+	# انتخاب Run/Idle خودکار با مدل واقعی (با fallback بی‌صدا)
+	if anim == null:
+		return
+	var spd := Vector2(velocity.x, velocity.z).length()
+	if spd > 1.0:
+		var run := ModelBank.pick_anim(anim, "run")
+		if run == "":
+			run = ModelBank.pick_anim(anim, "walk")
+		if run != "" and anim.current_animation != run:
+			anim.play(run)
+	else:
+		var idle := ModelBank.pick_anim(anim, "idle")
+		if idle != "" and anim.current_animation != idle \
+				and not str(anim.current_animation).to_lower().contains("attack"):
+			anim.play(idle)
+
+
 func _physics_process(delta: float) -> void:
 	_tick_timers(delta)
 	_apply_gravity(delta)
@@ -100,6 +130,7 @@ func _physics_process(delta: float) -> void:
 	_dash(move)
 	_attack()
 	move_and_slide()
+	_anim_tick()
 	_update_facing(move, delta)
 
 
@@ -210,8 +241,18 @@ func _update_facing(move: Vector3, delta: float) -> void:
 
 
 func _try_anim(name: String) -> void:
-	if anim and anim.has_animation(name):
+	if anim == null:
+		return
+	if anim.has_animation(name):
 		anim.play(name)
+		return
+	# نام‌های متفاوت پک‌ها: substring case-insensitive (مثلاً Attack3 → 1H_Melee_Attack…)
+	var key := name
+	if name.begins_with("Attack"):
+		key = "attack"
+	var alt := ModelBank.pick_anim(anim, key)
+	if alt != "":
+		anim.play(alt)
 
 
 func _dust() -> void:
