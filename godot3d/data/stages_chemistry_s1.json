@@ -1,0 +1,29 @@
+{
+  "region": "chemistry",
+  "season": 1,
+  "stages": [
+    {"index_no": 1, "free": true, "title_key": "region_chemistry",
+     "rooms": [
+       {"type": "obstacle", "gate": {"topic_id": "chemistry.g8.guz.madde-yapisi",
+         "kind": "value_panel", "challenge": "Turnusol kırmızı oldu → çözelti?",
+         "panels": [{"v": "asit", "ok": true}, {"v": "baz", "ok": false},
+                    {"v": "nötr", "ok": false}, {"v": "tuz", "ok": false}],
+         "time_limit": 12}},
+       {"type": "battle", "enemies": 3, "enemy_theme": "number_wisp"},
+       {"type": "boss", "boss_cfg": {"name_key": "boss_ph",
+         "topic_prefix": "chemistry.g8.guz",
+         "topic_suffixes": ["madde-yapisi", "madde-yapisi", "madde-yapisi"], "color": "b48aff"},
+        "phases": [
+          {"equation": "pH = 2 → nötrleştirmek için ne ekle?",
+           "panels": [{"v": "baz", "ok": true}, {"v": "asit", "ok": false},
+                      {"v": "su sadece", "ok": false}, {"v": "tuz", "ok": false}]},
+          {"equation": "pH = 11 → nötrleştirmek için?",
+           "panels": [{"v": "asit", "ok": true}, {"v": "baz", "ok": false},
+                      {"v": "yağ", "ok": false}, {"v": "şeker", "ok": false}]},
+          {"equation": "Kireç suyu + asit → kabarcık? Gaz: ?",
+           "panels": [{"v": "CO₂", "ok": true}, {"v": "O₂", "ok": false},
+                      {"v": "H₂", "ok": false}, {"v": "N₂", "ok": false}]}
+        ]}
+     ]}
+  ]
+}

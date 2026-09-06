@@ -1,0 +1,35 @@
+{
+  "region": "tournament",
+  "season": 1,
+  "note": "فینال فصل — Boss Rush (GDD §۸.۳). فقط در حالت سالن + واجد شرایط.",
+  "stages": [
+    {"index_no": 1, "championship": true,
+     "rooms": [
+       {"type": "boss", "boss_cfg": {"name_key": "boss_eski",
+         "topic_prefix": "math.g8.guz",
+         "topic_suffixes": ["carpanlar", "uslu", "karekoklu"], "color": "8df7c9"},
+        "phases": [
+          {"equation": "EBOB(48, 180) = ?", "panels": [{"v": "12", "ok": true}, {"v": "6", "ok": false}, {"v": "24", "ok": false}, {"v": "18", "ok": false}]},
+          {"equation": "(5²)⁻¹ = ?", "panels": [{"v": "-25", "ok": false}, {"v": "1/25", "ok": true}, {"v": "1/5", "ok": false}, {"v": "-1/25", "ok": false}]},
+          {"equation": "√75 sadeleşir → ?", "panels": [{"v": "5√3", "ok": true}, {"v": "3√25", "ok": false}, {"v": "25√3", "ok": false}, {"v": "15√5", "ok": false}]}
+        ]},
+       {"type": "boss", "boss_cfg": {"name_key": "boss_trafo",
+         "topic_prefix": "physics.g8.guz",
+         "topic_suffixes": ["basit-makineler", "isik-ses", "basit-makineler"], "color": "7ecaff"},
+        "phases": [
+          {"equation": "Kuvvet × kola = Yük × ? — eksiği bul", "panels": [{"v": "yük kolu", "ok": true}, {"v": "kütle", "ok": false}, {"v": "hız", "ok": false}, {"v": "enerji", "ok": false}]},
+          {"equation": "Ses boşlukta yayılır mı?", "panels": [{"v": "hayır", "ok": true}, {"v": "evet", "ok": false}, {"v": "bazen", "ok": false}, {"v": "çok yavaş", "ok": false}]},
+          {"equation": "Eğik düzlemde eğim ↓ → gereken kuvvet ?", "panels": [{"v": "azalır", "ok": true}, {"v": "artar", "ok": false}, {"v": "sabit", "ok": false}, {"v": "sıfır", "ok": false}]}
+        ]},
+       {"type": "boss", "boss_cfg": {"name_key": "boss_kaptan",
+         "topic_prefix": "english.g8.guz",
+         "topic_suffixes": ["quantifiers", "can-haveto", "adverbs"], "color": "5ad6b0"},
+        "phases": [
+          {"equation": "'___ water do you need?' (uncountable)", "panels": [{"v": "How much", "ok": true}, {"v": "How many", "ok": false}, {"v": "How few", "ok": false}, {"v": "How", "ok": false}]},
+          {"equation": "rule: 'Visitors ___ stay behind the line.'", "panels": [{"v": "have to", "ok": true}, {"v": "can", "ok": false}, {"v": "would", "ok": false}, {"v": "may", "ok": false}]},
+          {"equation": "'He answered me ___ (polite).'", "panels": [{"v": "politely", "ok": true}, {"v": "polite", "ok": false}, {"v": "politest", "ok": false}, {"v": "politeness", "ok": false}]}
+        ]},
+       {"type": "battle", "enemies": 2, "enemy_theme": "number_wisp"}
+     ]}
+  ]
+}

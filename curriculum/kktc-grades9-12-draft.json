@@ -1,0 +1,29 @@
+{
+  "version": "lise-draft1",
+  "meta": {
+    "grades": [9, 10, 11, 12],
+    "note": "پیش‌نویس اولیهٔ مناطق Lise طبق GDD (پایه ۹–۱۲ در فصل‌های بعدی فعال می‌شوند). منبع اسکلت: Fen Lisesi / Anadolu لایه‌های سرفصل عمومی KKTC + امکان مسیر IGCSE برای کالج‌ها (research/03). همهٔ موارد semester_estimate=true تا راستی‌آزمایی رسمی."
+  },
+  "topics": [
+    {"id": "math.g9.kumeler", "subject": "math", "grade": 9, "semester": "guz", "unit": "Mantık/Kümeler", "name_tr": "Kümeler ve Mantık", "name_en": "Sets and Logic", "name_fa": "مجموعه‌ها و منطق", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "math.g9.fonksiyon", "subject": "math", "grade": 9, "semester": "bahar", "unit": "Fonksiyon", "name_tr": "Fonksiyonlar", "name_en": "Functions", "name_fa": "توابع", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "math.g10.polinom", "subject": "math", "grade": 10, "semester": "guz", "unit": "Cebir", "name_tr": "Polinomlar ve Çarpanlara Ayırma", "name_en": "Polynomials and Factoring", "name_fa": "چندجمله‌ای‌ها و تجزیه", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "math.g10.trig", "subject": "math", "grade": 10, "semester": "bahar", "unit": "Trigonometri", "name_tr": "Trigonometri", "name_en": "Trigonometry", "name_fa": "مثلثات", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "math.g11.turev", "subject": "math", "grade": 11, "semester": "guz", "unit": "Analiz", "name_tr": "Limit ve Türev", "name_en": "Limits and Derivatives", "name_fa": "حد و مشتق", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "math.g11.integral", "subject": "math", "grade": 11, "semester": "bahar", "unit": "Analiz", "name_tr": "İntegral", "name_en": "Integrals", "name_fa": "انتگرال", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "math.g12.olasilik", "subject": "math", "grade": 12, "semester": "guz", "unit": "Olasılık", "name_tr": "Olasılık ve İstatistik", "name_en": "Probability and Statistics", "name_fa": "احتمال و آمار", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+
+    {"id": "physics.g9.madde", "subject": "physics", "grade": 9, "semester": "guz", "unit": "Madde", "name_tr": "Madde ve Özellikleri", "name_en": "Matter and Properties", "name_fa": "ماده و خواص", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "physics.g10.elektrik", "subject": "physics", "grade": 10, "semester": "guz", "unit": "Elektrik", "name_tr": "Elektrik ve Manyetizma", "name_en": "Electricity and Magnetism", "name_fa": "برق و مغناطیس", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "physics.g11.kuvvet", "subject": "physics", "grade": 11, "semester": "guz", "unit": "Mekanik", "name_tr": "Newton'un Hareket Yasaları", "name_en": "Newton's Laws of Motion", "name_fa": "قوانین حرکت نیوتن", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "physics.g12.dalga", "subject": "physics", "grade": 12, "semester": "bahar", "unit": "Dalga", "name_tr": "Dalga Mekaniği ve Modern Fizik", "name_en": "Wave Mechanics and Modern Physics", "name_fa": "مکانیک موج و فیزیک مدرن", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+
+    {"id": "chemistry.g9.kimya-bilimi", "subject": "chemistry", "grade": 9, "semester": "guz", "unit": "Temel", "name_tr": "Kimya Bilimi", "name_en": "Science of Chemistry", "name_fa": "علم شیمی", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "chemistry.g10.kanunlar", "subject": "chemistry", "grade": 10, "semester": "guz", "unit": "Temel Kanunlar", "name_tr": "Kimyanın Temel Kanunları ve Mol", "name_en": "Fundamental Laws and the Mole", "name_fa": "قوانین پایهٔ شیمی و مول", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "biology.g9.siniflandirma", "subject": "biology", "grade": 9, "semester": "guz", "unit": "Yaşam", "name_tr": "Canlıların Sınıflandırılması", "name_en": "Classification of Living Things", "name_fa": "طبقه‌بندی جانداران", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "biology.g11.sinir", "subject": "biology", "grade": 11, "semester": "guz", "unit": "Sistemler", "name_tr": "Sinir Sistemi", "name_en": "Nervous System", "name_fa": "سیستم عصبی", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "english.g9-12.core", "subject": "english", "grade": 9, "semester": "guz", "unit": "Core", "name_tr": "Lise İngilizce Çekirdek (A2→B1)", "name_en": "High-School English Core (A2→B1)", "name_fa": "هستهٔ انگلیسی دبیرستان (A2→B1)", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "ict.g11.veritabani", "subject": "ict", "grade": 11, "semester": "bahar", "unit": "Bilişim", "name_tr": "Veritabanı ve Programlama", "name_en": "Databases and Programming", "name_fa": "پایگاه‌داده و برنامه‌نویسی", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true},
+    {"id": "logic.g12.felsefe", "subject": "logic", "grade": 12, "semester": "guz", "unit": "Felsefe", "name_tr": "Felsefeye Giriş", "name_en": "Introduction to Philosophy", "name_fa": "مدخل فلسفه", "source_url": "https://ttd.mebnet.net/", "semester_estimate": true}
+  ]
+}

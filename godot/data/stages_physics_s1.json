@@ -1,0 +1,49 @@
+{
+  "region": "physics",
+  "season": 1,
+  "fallback_note": "Fizik Kalesi (Gazimağusa) — نیمسال اول پایه ۸: ماشین‌های ساده/نور و صدا.",
+  "stages": [
+    {
+      "index_no": 1, "free": true, "title_key": "region_physics",
+      "rooms": [
+        {"type": "lever", "lever": {"topic_id": "physics.g8.guz.basit-makineler",
+          "challenge": "Dengeyi kur! (2 kutu yeterli)", "crates": 4, "need": 2}},
+        {"type": "battle", "enemies": 3, "enemy_theme": "number_wisp"},
+        {"type": "obstacle", "gate": {"topic_id": "physics.g8.guz.isik-ses",
+          "kind": "value_panel", "challenge": "Hız = Yol ÷ Zaman → 150 m ÷ 3 s = ?",
+          "panels": [{"v": "50 m/s", "ok": true}, {"v": "453 m/s", "ok": false},
+                     {"v": "147 m/s", "ok": false}, {"v": "53 m/s", "ok": false}],
+          "time_limit": 10}},
+        {"type": "boss", "boss_cfg": {"name_key": "boss_trafo",
+          "topic_prefix": "physics.g8.guz",
+          "topic_suffixes": ["basit-makineler", "isik-ses", "basit-makineler"],
+          "color": "7ecaff"},
+         "phases": [
+           {"equation": "Kaldıraç: güç × kol = ? × kol", 
+            "panels": [{"v": "yük", "ok": true}, {"v": "hız", "ok": false},
+                       {"v": "ışık", "ok": false}, {"v": "ses", "ok": false}]},
+           {"equation": "Palanga: kuvvet kazancı 2 kat → ip kaç kat uzar?",
+            "panels": [{"v": "2 kat", "ok": true}, {"v": "yarım", "ok": false},
+                       {"v": "4 kat", "ok": false}, {"v": "sabit", "ok": false}]},
+           {"equation": "Işık düz yolda yayılır; ses için gerekli ortam: ?",
+            "panels": [{"v": "maddenin hâli", "ok": true}, {"v": "boşluk", "ok": false},
+                       {"v": "ısı", "ok": false}, {"v": "ışık", "ok": false}]}
+         ]}
+      ]
+    },
+    {
+      "index_no": 2,
+      "rooms": [
+        {"type": "circuit", "circuit": {"topic_id": "physics.g8.guz.isik-ses",
+          "challenge": "Seri devre: iki lamba yanmalı [1,1,_]",
+          "start": [1, 0, 0], "target": [1, 1, 0]}},
+        {"type": "battle", "enemies": 4, "enemy_theme": "number_wisp"},
+        {"type": "obstacle", "gate": {"topic_id": "physics.g8.guz.basit-makineler",
+          "kind": "value_panel", "challenge": "Eğik düzlem: yokuş S dikleşirse gereken kuvvet…",
+          "panels": [{"v": "azalır", "ok": false}, {"v": "artar", "ok": true},
+                     {"v": "sabit", "ok": false}, {"v": "sıfır", "ok": false}],
+          "time_limit": 10}}
+      ]
+    }
+  ]
+}

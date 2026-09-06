@@ -1,0 +1,59 @@
+keys,tr,en,fa
+ui_welcome,Bazino'ya Hoş Geldin,Welcome to Bazino,به بازینو خوش آمدی
+ui_pick_grade,Sınıfını Seç,Pick Your Grade,پایه‌ات را انتخاب کن
+ui_play,Oyna,Play,بازی
+ui_login,Giriş Yap,Log in,ورود
+ui_offline,Misafir (Çevrimdışı),Guest (Offline),مهمان (آفلاین)
+ui_lang,Dil Yapılandırması,Language,زبان
+ui_continue,Devam,Continue,ادامه
+ui_back,Geri,Back,بازگشت
+region_math,Matematik Vadisi,Valley of Math,درهٔ ریاضی
+boss_eski,Eski Hesapçı,The Old Calculator,حسابگر کهنه
+toast_formula,Yeni Güç Kazandın!,New Power Unlocked!,توان تازه به دست آمد!
+venue_locked,Bu haftalık etap Gamenets'te!,This weekly stage is at the GameNet!,مرحلهٔ هفتگی فقط در گیم‌نت!
+venue_code_hint,Salon kodunu gir (6 haneli),Enter venue code (6 digits),کد سالن (۶ رقم)
+hud_lum,Lum,Lum,لوم
+tut_move,←  A/D ile hareket et  →,Move with A/D,با A/D حرکت کن
+tut_jump,Zıpla: BOŞLUK  •  Sıvış: SHIFT,Jump: SPACE  •  Dash: SHIFT,پرش: اسپیس • دش: شیفت
+tut_attack,Saldır: J  •  Güç: 1-2-3,Attack: J  •  Power: 1-2-3,حمله: J • توان: ۱-۲-۳
+tool_carpanlar,Çarpan Bıçağı,Factor Blade,شمشیر مقسوم‌علیه
+tool_uslu,Üs Fırtınası,Exponent Storm,طوفان توان
+tool_karekok,Kök Kalkanı,Root Shield,سپر رادیکال
+tool_ozdeslik,Özdeşlik Mührü,Identity Seal,مُهر اتحاد
+gate_hint,Doğru platformda dur!,Stand on the right platform!,روی سکوی درست بایست!
+gate_timer,Zaman!,Time!,زمان!
+grade_6,6. Sınıf,Grade 6,پایهٔ ۶
+grade_7,7. Sınıf,Grade 7,پایهٔ ۷
+grade_8,8. Sınıf,Grade 8,پایهٔ ۸
+season_1,1. Sezon — Güz,Season 1 — Fall,فصل ۱ — نیمسال پاییز
+stage_free,Ücretsiz,Free,رایگان
+shrine_rest,Dinlendin + Kaydedildi,Rested + Saved,استراحت + ذخیره
+boss_shield,Kalkan için x'i bul!,Find x to break the shield!,برای شکستن سپر x را پیدا کن!
+victory,BÖLGE KURTARILDI!,REGION SAVED!,منطقه نجات یافت!
+region_physics,Fizik Kalesi,Physics Fortress,قلعهٔ فیزیک
+region_english,Dil Limanı,Language Harbor,بندر زبان
+boss_trafo,Trafo Ruhu,The Transformer Spirit,روح ترانسفورماتور
+boss_kaptan,Sessiz Kaptan,The Silent Captain,کاپیتان سکوت
+weekly_btn,HAFTALIK ETAP (Salon),WEEKLY STAGE (Venue),مرحلهٔ هفتگی (سالن)
+tour_btn,🏆 SEZON FİNALİ,🏆 SEASON FINALE,🏆 فینال فصل
+tour_locked,Final için 3 bölgeyi fethet + salon!,Clear 3 regions + venue!,برای فینال: ۳ منطقه + سالن!
+coop_host,Eşli Oyun (Host),Co-Op (Host),کو-اوپ (هاست)
+coop_join,Katıl (IP),Join (IP),پیوستن (IP)
+coop_ok,Bağlandı!,Connected!,متصل شد!
+grand_claimed,🏆 Kodun hazır: salona götür!,🏆 Show code at venue:,🏆 کد جایزه‌ات — در سالن نشان بده: 
+region_biology,Biyoloji Ormanı,Biology Forest,جنگل زیست‌شناسی
+region_chemistry,Kimya Labirenti,Chemistry Labyrinth,هزارتو شیمی
+region_ict,Teknoloji Şehri,Technology City,شهر فناوری
+region_logic,Zekâ Kulesi,Tower of Logic,برج ذکاوت
+boss_istilaci,İstilacı,The Invader,مهاجم
+boss_ph,pH Canavarı,The pH Beast,غول pH
+boss_virus,Hayalet Virus,Ghost Virus,ویروسِ روح
+boss_saatci,Saatçi,The Watchmaker,ساعت‌ساز
+season_2_teaser,2. Sezon Bahar — yakında!,Season 2 Bahar — soon!,فصل ۲ Bahar — به‌زودی!
+ui_pause,Duraklat,Pause,مکث
+ui_resume,Sürdür,Resume,ادامه بده
+ui_restart,Baştan Başla,Restart,شروع دوباره
+ui_title,Ana Menü,Main Menu,منوی اصلی
+region_cleared,BÖLGE TEMİZLENDİ!,AREA CLEARED!,منطقه پاک شد!
+death_back,Yeniden Doğuyorsun...,Respawning...,دوباره زنده می‌شوی...
+combo_hit,Kombo!,Combo!,کمبو!

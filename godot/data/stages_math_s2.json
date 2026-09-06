@@ -1,0 +1,35 @@
+{
+  "region": "math",
+  "season": 2,
+  "fallback_note": "نیمسال دوم (Bahar) پایه ۸: خطی/شیب/مثلث‌ها/تبدیل/داده-احتمال.",
+  "stages": [
+    {"index_no": 1, "free": true, "title_key": "season_2_teaser",
+     "rooms": [
+       {"type": "obstacle", "gate": {"topic_id": "math.g8.bahar.dogrusal",
+         "kind": "value_panel", "challenge": "2(x + 3) = 14 → x = ?",
+         "panels": [{"v": "4", "ok": true}, {"v": "11", "ok": false},
+                    {"v": "5", "ok": false}, {"v": "8", "ok": false}],
+         "time_limit": 10}},
+       {"type": "battle", "enemies": 4, "enemy_theme": "number_wisp"},
+       {"type": "obstacle", "gate": {"topic_id": "math.g8.bahar.egim",
+         "kind": "value_panel", "challenge": "3x ≤ 12 → büyük tamsayı x en çok ?",
+         "panels": [{"v": "4", "ok": true}, {"v": "5", "ok": false},
+                    {"v": "3", "ok": false}, {"v": "12", "ok": false}],
+         "time_limit": 10}},
+       {"type": "boss", "boss_cfg": {"name_key": "boss_eski",
+         "topic_prefix": "math.g8.bahar",
+         "topic_suffixes": ["dogrusal", "ucgenler", "veri"], "color": "8df7c9"},
+        "phases": [
+          {"equation": "Eğim: (0,1) ve (2,5) doğrusu → eğim?",
+           "panels": [{"v": "2", "ok": true}, {"v": "3", "ok": false},
+                      {"v": "4", "ok": false}, {"v": "1/2", "ok": false}]},
+          {"equation": "Üçgen: iki açı 50° ve 60° → üçüncü?",
+           "panels": [{"v": "70°", "ok": true}, {"v": "80°", "ok": false},
+                      {"v": "90°", "ok": false}, {"v": "110°", "ok": false}]},
+          {"equation": "Zar atmak: 4 gelme olasılığı?",
+           "panels": [{"v": "1/6", "ok": true}, {"v": "1/4", "ok": false},
+                      {"v": "4/6", "ok": false}, {"v": "1", "ok": false}]}
+        ]}
+     ]}
+  ]
+}

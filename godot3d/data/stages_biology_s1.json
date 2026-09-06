@@ -1,0 +1,34 @@
+{
+  "region": "biology",
+  "season": 1,
+  "stages": [
+    {"index_no": 1, "free": true, "title_key": "region_biology",
+     "rooms": [
+       {"type": "obstacle", "gate": {"topic_id": "biology.g8.guz.fotosentez",
+         "kind": "value_panel", "challenge": "Fotosentez: CO₂ + H₂O + ışık → ?",
+         "panels": [{"v": "glikoz + O₂", "ok": true}, {"v": "O₂ + CO₂", "ok": false},
+                    {"v": "sadece su", "ok": false}, {"v": "tuz", "ok": false}],
+         "time_limit": 12}},
+       {"type": "battle", "enemies": 3, "enemy_theme": "root_crawler"},
+       {"type": "obstacle", "gate": {"topic_id": "biology.g8.guz.besin-zinciri",
+         "kind": "value_panel", "challenge": "Zincir: ot → tavşan → ? ",
+         "panels": [{"v": "tilki 🦊", "ok": true}, {"v": "ot", "ok": false},
+                    {"v": "güneş", "ok": false}, {"v": "taş", "ok": false}],
+         "time_limit": 12}},
+       {"type": "boss", "boss_cfg": {"name_key": "boss_istilaci",
+         "topic_prefix": "biology.g8.guz",
+         "topic_suffixes": ["fotosentez", "besin-zinciri", "fotosentez"], "color": "9dff70"},
+        "phases": [
+          {"equation": "İstilacı zinciri kopardı: üretici boşluğa ne konur?",
+           "panels": [{"v": "bitki", "ok": true}, {"v": "aslan", "ok": false},
+                      {"v": "böcek", "ok": false}, {"v": "su", "ok": false}]},
+          {"equation": "Tüketici I: otobur ← ?", "panels": [{"v": "tavşan", "ok": true},
+                       {"v": "kartal", "ok": false}, {"v": "mantar", "ok": false},
+                       {"v": "alg olamaz", "ok": false}]},
+          {"equation": "Ayrıştırıcı hangisi?", "panels": [{"v": "mantar", "ok": true},
+                       {"v": "güneş", "ok": false}, {"v": "tavşan", "ok": false},
+                       {"v": "rüzgâr", "ok": false}]}
+        ]}
+     ]}
+  ]
+}

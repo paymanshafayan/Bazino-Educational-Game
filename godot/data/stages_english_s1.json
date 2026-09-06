@@ -1,0 +1,40 @@
+{
+  "region": "english",
+  "season": 1,
+  "fallback_note": "Dil Limanı (Girne) — بدون ترجمهٔ ترکی: همهٔ تابلوها/دستورها انگلیسی.",
+  "stages": [
+    {
+      "index_no": 1, "free": true, "title_key": "region_english",
+      "rooms": [
+        {"type": "obstacle", "gate": {"topic_id": "english.g8.guz.quantifiers",
+          "kind": "value_panel",
+          "challenge": "Follow the sign: 'How ___ milk do we need?'",
+          "panels": [{"v": "much", "ok": true}, {"v": "many", "ok": false},
+                     {"v": "a lot", "ok": false}, {"v": "few", "ok": false}],
+          "time_limit": 12}},
+        {"type": "battle", "enemies": 3, "enemy_theme": "number_wisp"},
+        {"type": "obstacle", "gate": {"topic_id": "english.g8.guz.can-haveto",
+          "kind": "value_panel",
+          "challenge": "The harbour rule: 'You ___ wear a vest on the boat.' (obligation)",
+          "panels": [{"v": "have to", "ok": true}, {"v": "can", "ok": false},
+                     {"v": "may", "ok": false}, {"v": "would", "ok": false}],
+          "time_limit": 12}},
+        {"type": "boss", "boss_cfg": {"name_key": "boss_kaptan",
+          "topic_prefix": "english.g8.guz",
+          "topic_suffixes": ["quantifiers", "can-haveto", "adverbs"],
+          "color": "5ad6b0"},
+         "phases": [
+           {"equation": "CAPTAIN: 'Bring me the ___ crate — the wet one under the lamp!'",
+            "panels": [{"v": "blue", "ok": false}, {"v": "wet", "ok": true},
+                       {"v": "dry", "ok": false}, {"v": "red", "ok": false}]},
+           {"equation": "CAPTAIN: 'Move ___! The tide is coming!' (manner)",
+            "panels": [{"v": "quickly", "ok": true}, {"v": "quick", "ok": false},
+                       {"v": "quicker than", "ok": false}, {"v": "quickest", "ok": false}]},
+           {"equation": "CAPTAIN: 'There are ___ boats tonight.' (countable → few)",
+            "panels": [{"v": "few", "ok": true}, {"v": "little", "ok": false},
+                       {"v": "much", "ok": false}, {"v": "any", "ok": false}]}
+         ]}
+      ]
+    }
+  ]
+}

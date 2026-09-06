@@ -1,0 +1,29 @@
+{
+  "region": "biology",
+  "season": 2,
+  "stages": [
+    {"index_no": 1, "free": true, "title_key": "season_2_teaser",
+     "rooms": [
+       {"type": "obstacle", "gate": {"topic_id": "biology.g8.bahar.hucre-bolunmesi",
+         "kind": "value_panel", "challenge": "Mitoz: 1 hücre → bölününce kız hücre?",
+         "panels": [{"v": "2 aynı", "ok": true}, {"v": "4 farklı", "ok": false},
+                    {"v": "2 farklı", "ok": false}, {"v": "1", "ok": false}],
+         "time_limit": 12}},
+       {"type": "battle", "enemies": 3, "enemy_theme": "root_crawler"},
+       {"type": "boss", "boss_cfg": {"name_key": "boss_istilaci",
+         "topic_prefix": "biology.g8.bahar",
+         "topic_suffixes": ["hucre-bolunmesi", "hucre-bolunmesi", "hucre-bolunmesi"], "color": "9dff70"},
+        "phases": [
+          {"equation": "Mayoz sonucu oluşan hücreler?",
+           "panels": [{"v": "eşey hücreleri", "ok": true}, {"v": "aynı beden hücresi", "ok": false},
+                      {"v": "spor yok", "ok": false}, {"v": "bakteri", "ok": false}]},
+          {"equation": "Kalıtım: Baskın A × çekinik a → AA′ fenotipi?",
+           "panels": [{"v": "A özelliği", "ok": true}, {"v": "a özelliği", "ok": false},
+                      {"v": "karma", "ok": false}, {"v": "yok", "ok": false}]},
+          {"equation": "DNA kromozomda taşınır → kromozom nerede?",
+           "panels": [{"v": "çekirdek", "ok": true}, {"v": "mitokondri dışı", "ok": false},
+                      {"v": "hücre zarı", "ok": false}, {"v": "stoplazmada serbest", "ok": false}]}
+        ]}
+     ]}
+  ]
+}

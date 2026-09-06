@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bazino — Kıbrıs Macerası | ماجراجویی قبرس</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗺️</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══════════ WELCOME ═══════════ -->
+  <section id="scr-welcome" class="screen">
+    <div class="hero">
+      <div class="hero-inner">
+        <div class="logo-badge">🗺️</div>
+        <h1 class="game-title">BAZINO</h1>
+        <p class="game-tag" id="w-tag"></p>
+        <div class="lang-pick" id="w-langs"></div>
+        <div class="panel glass">
+          <input id="w-name" maxlength="16" autocomplete="off">
+          <select id="w-age"></select>
+          <div id="w-league" class="league-preview"></div>
+          <button id="w-start" class="btn primary big"></button>
+          <button id="w-continue" class="btn ghost hidden"></button>
+        </div>
+        <p class="footnote" id="w-note"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ MAP ═══════════ -->
+  <section id="scr-map" class="screen">
+    <header class="hud">
+      <div class="hud-left">
+        <div class="avatar" id="h-avatar">🧑‍🎓</div>
+        <div>
+          <div class="hud-name" id="h-name"></div>
+          <div class="hud-league" id="h-league"></div>
+        </div>
+      </div>
+      <div class="hud-right">
+        <div class="stat" title="XP">⭐ <span id="h-xp">0</span></div>
+        <div class="stat" title="Altın">🪙 <span id="h-coin">0</span></div>
+        <div class="stat" title="Seviye" id="h-lvlwrap">🎖️ Sv.<span id="h-lvl">1</span></div>
+        <button class="icon-btn" id="h-achBtn" title="Başarılar">🏆</button>
+        <button class="icon-btn" id="h-setBtn" title="Ayarlar">⚙️</button>
+      </div>
+    </header>
+    <div class="xpbar"><div id="h-xpfill"></div></div>
+
+    <h2 class="section-title" id="m-title"></h2>
+    <div class="map-grid" id="m-regions"></div>
+
+    <div id="m-bosswrap">
+      <div class="boss-card" id="m-boss"></div>
+    </div>
+    <p class="hint-line" id="m-hint"></p>
+  </section>
+
+  <!-- ═══════════ REGION INFO ═══════════ -->
+  <section id="scr-region" class="screen">
+    <div class="modal-card glass" id="r-card"></div>
+  </section>
+
+  <!-- ═══════════ QUIZ ═══════════ -->
+  <section id="scr-quiz" class="screen">
+    <div class="quiz-top">
+      <button class="icon-btn" id="q-quit">✕</button>
+      <div class="q-meta">
+        <span class="topic-badge" id="q-topic"></span>
+        <span class="q-count" id="q-count"></span>
+      </div>
+      <div class="q-right">
+        <span id="q-hearts"></span>
+        <span id="q-streak" class="streak"></span>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="q-panel glass">
+        <div class="q-topline">
+          <p class="q-text" id="q-text"></p>
+          <button class="btn tiny dil hidden" id="q-dil"></button>
+        </div>
+        <div class="opts" id="q-opts"></div>
+        <div class="feedback hidden" id="q-fb">
+          <div class="fb-head" id="q-fbhead"></div>
+          <p class="fb-why" id="q-why"></p>
+          <button class="btn primary" id="q-next"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ EXAM (BOSS) ═══════════ -->
+  <section id="scr-exam" class="screen">
+    <div id="ex-intro"></div>
+    <div id="ex-live" class="hidden">
+      <div class="quiz-top">
+        <button class="icon-btn" id="ex-quit">✕</button>
+        <div class="q-meta"><span class="topic-badge exam">🎓</span><span class="q-count" id="ex-count"></span></div>
+        <div class="q-right"><span class="timer" id="ex-timer">08:00</span></div>
+      </div>
+      <div class="quiz-body">
+        <div class="q-panel glass">
+          <p class="q-text" id="ex-text"></p>
+          <div class="opts" id="ex-opts"></div>
+          <div class="feedback hidden" id="ex-fb">
+            <div class="fb-head" id="ex-fbhead"></div>
+            <button class="btn primary" id="ex-next"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ RESULT ═══════════ -->
+  <section id="scr-result" class="screen">
+    <div class="modal-card glass" id="res-card"></div>
+  </section>
+
+</div>
+
+<div class="modal-back hidden" id="modalBack">
+  <div class="modal-card glass" id="modalCard"></div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

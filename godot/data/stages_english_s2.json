@@ -1,0 +1,34 @@
+{
+  "region": "english",
+  "season": 2,
+  "stages": [
+    {"index_no": 1, "free": true, "title_key": "season_2_teaser",
+     "rooms": [
+       {"type": "obstacle", "gate": {"topic_id": "english.g8.bahar.past-simple",
+         "kind": "value_panel", "challenge": "'Yesterday, we ___ to the harbour.'",
+         "panels": [{"v": "went", "ok": true}, {"v": "go", "ok": false},
+                    {"v": "will go", "ok": false}, {"v": "going", "ok": false}],
+         "time_limit": 12}},
+       {"type": "battle", "enemies": 3, "enemy_theme": "number_wisp"},
+       {"type": "obstacle", "gate": {"topic_id": "english.g8.bahar.comparison",
+         "kind": "value_panel", "challenge": "'The red boat is ___ than the blue one.'",
+         "panels": [{"v": "faster", "ok": true}, {"v": "fastest", "ok": false},
+                    {"v": "more fast", "ok": false}, {"v": "fast", "ok": false}],
+         "time_limit": 12}},
+       {"type": "boss", "boss_cfg": {"name_key": "boss_kaptan",
+         "topic_prefix": "english.g8.bahar",
+         "topic_suffixes": ["past-simple", "comparison", "future"], "color": "5ad6b0"},
+        "phases": [
+          {"equation": "CAPTAIN: 'Tell me what you ___ (do) at 8 pm yesterday.'",
+           "panels": [{"v": "were doing", "ok": true}, {"v": "do", "ok": false},
+                      {"v": "will do", "ok": false}, {"v": "done", "ok": false}]},
+          {"equation": "CAPTAIN: 'This is the ___ meal in the port!'",
+           "panels": [{"v": "best", "ok": true}, {"v": "better", "ok": false},
+                      {"v": "good", "ok": false}, {"v": "most good", "ok": false}]},
+          {"equation": "CAPTAIN: 'I ___ sail at dawn. (plan)'",
+           "panels": [{"v": "am going to", "ok": true}, {"v": "did", "ok": false},
+                      {"v": "was", "ok": false}, {"v": "have", "ok": false}]}
+        ]}
+     ]}
+  ]
+}

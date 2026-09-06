@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "arena/*"]
+  pull_request:
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: وابستگی‌ها
+        run: |
+          cd server
+          pip install -r requirements.txt
+      - name: تست‌های pytest
+        run: |
+          cd server
+          python -m pytest tests/ -q
+
+  godot-static-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: lint ساختاری
+        run: python3 tools/godot_lint.py
+      - name: پارسر GDScript (gdtoolkit)
+        run: |
+          pip install gdtoolkit==4.3.3
+          cd godot
+          FAIL=0
+          for f in $(find scripts -name "*.gd"); do
+            gdparse "$f" || FAIL=1
+          done
+          exit $FAIL
+
+  data-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: اعتبار JSONهای داده (curriculum + stages)
+        run: |
+          python3 - << 'EOF'
+          import json, glob, sys
+          bad = 0
+          for p in glob.glob("**/*.json", recursive=True):
+              if ".venv" in p or ".git/" in p:
+                  continue
+              try:
+                  json.load(open(p, encoding="utf-8"))
+              except Exception as e:
+                  print("BAD", p, e); bad = 1
+          sys.exit(bad)
+          EOF
