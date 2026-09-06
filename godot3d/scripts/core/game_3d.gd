@@ -173,7 +173,11 @@ func _start_game() -> void:
 	var rooms_n := 0
 	for st in stage_data:
 		rooms_n += (st.get("rooms", []) as Array).size()
-	_island.build("8df7c9", "16203a", float(rooms_n) * 16.0 + 90.0)
+	var th := RegionThemes.theme(_region)
+	_island.env_sky_top = Color(str(th.get("sky", "0b0e1a")))
+	_island.fog_d = float(th.get("fog", 0.045))
+	_island.build(str(th.get("accent", "8df7c9")), str(th.get("ground", "16203a")),
+		float(rooms_n) * 16.0 + 90.0)
 	_player = Player3D.new()
 	add_child(_player)
 	_player.position = Vector3(0, 0.5, 14)
@@ -281,13 +285,32 @@ func _spawn_gate(room: Dictionary, pos: Vector3) -> void:
 
 func _spawn_battle(room: Dictionary, pos: Vector3) -> void:
 	var n := int(room.get("enemies", 3))
-	var colors := ["59d6ff", "ff9f5a", "b78dff"]
+	var th := RegionThemes.theme(_region)
+	var colors: Array = th.get("wisp_colors", ["59d6ff"])
+	var theme_key := str(room.get("enemy_theme", "number_wisp"))
 	for i in n:
-		var w := Wisp3D.create(colors[i % colors.size()])
-		add_child(w)
-		w.position = pos + Vector3((i - n * 0.5 + 0.5) * 4.0, 1.4, -2.0)
-		_pending += 1
-		w.tree_exited.connect(func(): _room_done())
+		var kind := RegionThemes.enemy_kind(theme_key, _stage_index, i)
+		var color: String = colors[i % colors.size()]
+		var spot := pos + Vector3((i - n * 0.5 + 0.5) * 4.0, 1.4, -2.0)
+		match kind:
+			"golem":
+				var g := Golem3D.create(color)
+				add_child(g)
+				g.position = spot + Vector3(0, -1.3, 0)
+				_pending += 1
+				g.tree_exited.connect(func(): _room_done())
+			"spitter":
+				var s := Spitter3D.create(color)
+				add_child(s)
+				s.position = spot
+				_pending += 1
+				s.tree_exited.connect(func(): _room_done())
+			_:
+				var w := Wisp3D.create(color)
+				add_child(w)
+				w.position = spot
+				_pending += 1
+				w.tree_exited.connect(func(): _room_done())
 
 
 func _spawn_boss(room: Dictionary, pos: Vector3) -> void:
@@ -299,7 +322,12 @@ func _spawn_boss(room: Dictionary, pos: Vector3) -> void:
 			phases.append({"equation": g.get("challenge", "= ?"), "panels": g.get("panels", [])})
 	var cfg: Dictionary = room.get("boss_cfg", {}).duplicate()
 	if cfg.is_empty():
-		cfg = {"name_key": "boss_%s" % _region, "color": "7ecaff"}
+		var keys := {"math": "boss_eski", "physics": "boss_trafo", "biology": "boss_istilaci",
+			"chemistry": "boss_ph", "english": "boss_kaptan", "ict": "boss_virus",
+			"logic": "boss_saatci"}
+		var th2 := RegionThemes.theme(_region)
+		cfg = {"name_key": keys.get(_region, "boss_eski"),
+			"color": str(th2.get("accent", "7ecaff"))}
 	_boss = Boss3D.create(phases, cfg)
 	add_child(_boss)
 	_boss.position = pos + Vector3(0, 0.2, -6.0)

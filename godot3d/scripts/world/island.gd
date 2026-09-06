@@ -7,6 +7,7 @@ const RADIUS := 34.0
 
 var env_sky_top := Color("0b0e1a")
 var accent := Color("8df7c9")
+var fog_d := 0.045
 var length := 400.0   # راهرو: از z=+20 تا z=-length
 var width := 42.0
 
@@ -27,7 +28,7 @@ func _make_environment() -> void:
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = env_sky_top
 	env.fog_enabled = true
-	env.fog_density = 0.045
+	env.fog_density = fog_d
 	env.glow_enabled = true
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	var we := WorldEnvironment.new()
