@@ -9,16 +9,18 @@ static var _scanned := false
 static var _role_cache: Dictionary = {}   # role -> مسیر مدل
 
 
-## نقش → فهرست کلیدواژه‌های نام فایل (اولین تطابق برنده است)
+## نقش → فهرست کلیدواژه‌های نام فایل، به‌ترتیب اولویت (پین‌شده با پک‌های واقعی کاربر)
 const ROLES := {
-	"player": ["knight", "adventurer", "rogue", "barbarian", "paladin", "mage", "hero"],
-	"wisp": ["ghost", "spirit", "bat", "floating", "eye", "skull", "wisp", "imp"],
-	"golem": ["golem", "rockmonster", "ogre", "troll", "cyclops", "rock"],
-	"spitter": ["slime", "mushroom", "plant", "tentacle", "spider"],
-	"boss": ["dragon", "demon", "golem", "knight", "gorilla", "kraken"],
-	"tree": ["tree", "palm", "pine", "trunk"],
-	"rock": ["rock", "stone", "boulder", "cliff"],
-	"bush": ["bush", "grass", "flower", "crystal", "gem", "shroom"],
+	"player": ["knight_male", "knight", "adventurer", "rogue", "barbarian", "paladin",
+		"mage", "hero", "ninja_male"],
+	"wisp": ["ghost", "hywirl", "spirit", "bat", "skull", "wisp", "imp", "eye"],
+	"golem": ["goleling_evolved", "goleling", "yeti", "golem", "ogre", "troll", "cyclops"],
+	"spitter": ["mushroomking", "squidle", "glub", "cactoro", "slime", "mushroom",
+		"tentacle", "spider", "plant"],
+	"boss": ["dragon_evolved", "dragon", "demon", "kraken", "gorilla", "boss"],
+	"tree": ["birchtree_1", "birchtree", "tree", "palm", "pine", "trunk"],
+	"rock": ["rock_1", "rock", "stone", "boulder", "cliff"],
+	"bush": ["bush_flowers", "bush", "grass", "flower", "crystal", "gem", "shroom"],
 }
 
 
@@ -59,13 +61,25 @@ static func role_path(role: String) -> String:
 	_scan()
 	if _role_cache.has(role):
 		return str(_role_cache[role])
+	# اولویت ۱: فرمت (glb/gltf بهترین ایمپورت در Godot) — سپس کلیدواژه — سپس فایل
 	var kws: Array = ROLES.get(role, [])
-	var best := ""
+	var buckets: Array[Array] = [[], [], []]
 	for f in _files:
-		var base := f.get_file().to_lower()
+		var low := f.to_lower()
+		if low.ends_with(".glb") or low.ends_with(".gltf"):
+			buckets[0].append(f)
+		elif low.ends_with(".fbx"):
+			buckets[1].append(f)
+		else:
+			buckets[2].append(f)
+	var best := ""
+	for bucket in buckets:
 		for kw in kws:
-			if base.contains(str(kw).to_lower()):
-				best = f
+			for f in bucket:
+				if f.get_file().to_lower().contains(str(kw).to_lower()):
+					best = f
+					break
+			if best != "":
 				break
 		if best != "":
 			break
