@@ -5,7 +5,4 @@ __pycache__/
 dev.db
 .DS_Store
 .github/workflows/
-godot3d/assets/external/**
-!godot3d/assets/external/
-!godot3d/assets/external/**/
 !godot3d/assets/external/**/راهنما.txt
