@@ -5,6 +5,7 @@ extends Node3D
 const SEASON := 1
 
 var _region := "math"
+var _season := SEASON
 var _stage_index := 1
 var _stage_count := 1
 var _island: Island3D
@@ -17,6 +18,9 @@ var _stage_cleared := false
 var _stage_title := ""
 var _boss: Boss3D
 var _next_z := -10.0
+var _coop: Coop3D
+var _venue_code: LineEdit
+var _select_status: Label
 
 
 func _ready() -> void:
@@ -125,27 +129,178 @@ func _region_select() -> void:
 	layer.add_child(veil)
 	var title := Label.new()
 	title.text = "🗺 " + tr("ui_play")
-	title.add_theme_font_size_override("font_size", 34)
+	title.add_theme_font_size_override("font_size", 30)
 	title.add_theme_color_override("font_color", Color("7ecaff"))
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.position = Vector2(340, 120)
-	title.size = Vector2(600, 50)
+	title.position = Vector2(340, 76)
+	title.size = Vector2(600, 44)
 	layer.add_child(title)
+	# انتخاب فصل (دادهٔ واقعی S2 برای پنج درس؛ برای بقیه تیزِر)
+	var y := 130
+	for s in [1, 2]:
+		var chip := Button.new()
+		chip.text = tr("season_1") if s == 1 else tr("season_2_teaser")
+		chip.position = Vector2(460 + (s - 1) * 190, y)
+		chip.custom_minimum_size = Vector2(180, 34)
+		chip.text += ("" if s == _season else "")
+		chip.disabled = (s == _season)
+		var ss := s
+		chip.pressed.connect(func() -> void:
+			Sfx.play("click", -6.0)
+			_season = ss
+			layer.queue_free()
+			_region_select())
+		layer.add_child(chip)
+	_select_status = Label.new()
+	_select_status.position = Vector2(340, 640)
+	_select_status.size = Vector2(600, 30)
+	_select_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	layer.add_child(_select_status)
 	var i := 0
 	for region in StageLoader.regions():
+		var s2 := StageLoader.has_season2(region)
+		var eff_season := _season if (_season == 1 or s2) else 1
 		var b := Button.new()
-		var done := SaveData.is_region_cleared(region, SEASON)
-		b.text = ("✅ " if done else "🏝 ") + StageLoader.region_title(region)
-		b.custom_minimum_size = Vector2(320, 44)
-		b.position = Vector2(480, 190 + i * 52)
+		var done := SaveData.is_region_cleared(region, eff_season)
+		var label_t := ("✅ " if done else "🏝 ") + StageLoader.region_title(region)
+		if _season == 2 and not s2:
+			label_t += "  (S1)"
+		b.text = label_t
+		b.custom_minimum_size = Vector2(340, 40)
+		b.position = Vector2(470, y + 44 + i * 46)
 		var rg := region
+		var es := eff_season
 		b.pressed.connect(func() -> void:
 			Sfx.play("click", -5.0)
 			layer.queue_free()
 			_region = rg
+			_season = es
 			_start_game())
 		layer.add_child(b)
 		i += 1
+	# — هفتگی (نیازمند ورود) —
+	var wb := Button.new()
+	wb.text = "🗓 " + tr("weekly_btn") + ("  ✓" if Api.token != "" else "  🔒")
+	wb.custom_minimum_size = Vector2(340, 40)
+	wb.position = Vector2(470, y + 44 + i * 46)
+	wb.pressed.connect(_on_weekly_pressed.bind(layer))
+	layer.add_child(wb)
+	i += 1
+	# — فینال فصل: Boss Rush (سالن/tour) —
+	var tb := Button.new()
+	var eligible := _tournament_eligible()
+	tb.text = "🏆 " + tr("tour_btn") + ("" if eligible else "  🔒")
+	tb.custom_minimum_size = Vector2(340, 40)
+	tb.position = Vector2(470, y + 44 + i * 46)
+	tb.pressed.connect(_on_tournament_pressed.bind(layer))
+	layer.add_child(tb)
+	i += 1
+	# — کد سالن (Venue) —
+	var vc := LineEdit.new()
+	vc.placeholder_text = tr("venue_code_hint")
+	vc.max_length = 6
+	vc.position = Vector2(470, y + 44 + i * 46)
+	vc.size = Vector2(180, 36)
+	layer.add_child(vc)
+	_venue_code = vc
+	var vb := Button.new()
+	vb.text = "⚑"
+	vb.position = Vector2(660, y + 44 + i * 46)
+	vb.size = Vector2(40, 36)
+	vb.pressed.connect(_on_venue)
+	layer.add_child(vb)
+	i += 1
+	# — کو-اوپ LAN —
+	var chost := Button.new()
+	chost.text = "🖧 " + tr("coop_host")
+	chost.position = Vector2(470, y + 44 + i * 46)
+	chost.custom_minimum_size = Vector2(160, 36)
+	chost.pressed.connect(_on_coop_host)
+	layer.add_child(chost)
+	var cjoin := Button.new()
+	cjoin.text = tr("coop_join")
+	cjoin.position = Vector2(640, y + 44 + i * 46)
+	cjoin.custom_minimum_size = Vector2(110, 36)
+	cjoin.pressed.connect(func(): _on_coop_join())
+	layer.add_child(cjoin)
+	var cip := LineEdit.new()
+	cip.name = "CoopIP"
+	cip.placeholder_text = "192.168.1.x"
+	cip.text = "192.168.1.2"
+	cip.position = Vector2(760, y + 44 + i * 46)
+	cip.size = Vector2(150, 36)
+	layer.add_child(cip)
+	Api.venue_finished.connect(_on_venue_result)
+
+
+func _on_weekly_pressed(layer: CanvasLayer) -> void:
+	if Api.token == "":
+		_select_status.text = "🔒 " + tr("ui_login")
+		Sfx.play("gate_bad", -6.0)
+		return
+	Sfx.play("click", -5.0)
+	layer.queue_free()
+	_region = "weekly"
+	_season = 1
+	_start_game()
+
+
+func _on_tournament_pressed(layer: CanvasLayer) -> void:
+	if not _tournament_eligible():
+		_select_status.text = "🔒 " + tr("tour_locked")
+		Sfx.play("gate_bad", -6.0)
+		return
+	Sfx.play("click", -5.0)
+	layer.queue_free()
+	_region = "tournament"
+	_season = 1
+	_start_game()
+
+
+func _tournament_eligible() -> bool:
+	if bool(SaveData.data.get("venue_mode", false)):
+		return true
+	# معادل محلیِ واجد‌شرایطی: ۳ جزیرهٔ پاک‌شده (مینی‌سرور همان را با تسلط حساب می‌کند)
+	var cleared := 0
+	for r in StageLoader.regions():
+		if SaveData.is_region_cleared(r, 1):
+			cleared += 1
+	return cleared >= 3
+
+
+func _on_venue() -> void:
+	Sfx.play("click", -6.0)
+	_select_status.text = "…"
+	Api.join_venue(_venue_code.text.strip_edges())
+
+
+func _on_venue_result(ok: bool, data: Dictionary) -> void:
+	_select_status.text = tr("coop_ok") if ok else "✗"
+	if ok:
+		SaveData.data.venue_mode = true
+		SaveData.data.venue_name = str(data.get("venue_name", ""))
+		SaveData.save_now()
+		Sfx.play("gate_ok", -4.0)
+
+
+func _on_coop_host() -> void:
+	_coop = Coop3D.new()
+	add_child(_coop)
+	var err := _coop.host()
+	_select_status.text = "🖧 host ✓ (34197)" if err == OK else "✗ host"
+	if err == OK:
+		Sfx.play("gate_ok", -5.0)
+
+
+func _on_coop_join() -> void:
+	_coop = Coop3D.new()
+	add_child(_coop)
+	var ip_node := get_node_or_null("RegionSelect/CoopIP") as LineEdit
+	var ip := ip_node.text.strip_edges() if ip_node else "192.168.1.2"
+	var err := _coop.join(ip)
+	_select_status.text = ("🖧 join %s ✓" % ip) if err == OK else "✗ join"
+	if err == OK:
+		Sfx.play("gate_ok", -5.0)
 
 
 func _ping_status() -> void:
@@ -168,7 +323,7 @@ func _on_login_result(ok: bool, _d: Dictionary) -> void:
 func _start_game() -> void:
 	_island = Island3D.new()
 	add_child(_island)
-	var stage_data := StageLoader.load_stages(_region, SEASON)
+	var stage_data := StageLoader.load_stages(_region, _season)
 	_stage_count = maxi(stage_data.size(), 1)
 	var rooms_n := 0
 	for st in stage_data:
@@ -189,7 +344,10 @@ func _start_game() -> void:
 	_hud.setup(_player)
 	Sfx.play_music("ambient")
 	_stage_index = 1
-	await _build_stage(_region, SEASON, _stage_index)
+	if _coop:
+		_coop.attach_local_player(_player)
+		_coop.spawn_ghost(self)
+	await _build_stage(_region, _season, _stage_index)
 	_hud.show_banner("%s — %s (1/%d)" % [
 		StageLoader.region_title(_region), _stage_title, _stage_count])
 
@@ -254,7 +412,10 @@ func _room_done() -> void:
 			_advance_stage()
 		elif not _cleared:
 			_cleared = true
-			SaveData.set_region_cleared(_region, SEASON)
+			if _region == "tournament":
+				_claim_grand()
+			else:
+				SaveData.set_region_cleared(_region, _season)
 			_hud.show_banner("🏆 " + tr("region_cleared"), 3.5)
 			SaveData.save_now()
 
@@ -265,7 +426,19 @@ func _advance_stage() -> void:
 	_hud.show_banner("➜ %d/%d" % [_stage_index, _stage_count], 1.6)
 	await get_tree().create_timer(1.4).timeout
 	# مرحلهٔ بعد جلوتر در همان جزیره ساخته می‌شود (راهرو ادامه دارد)
-	await _build_stage(_region, SEASON, _stage_index)
+	await _build_stage(_region, _season, _stage_index)
+
+
+func _claim_grand() -> void:
+	# فینال فصل: جایزهٔ بزرگ با کد تحویل در باجه (همان رفتار 2D)
+	if Api.token != "" and Api.child_id > 0:
+		Api.reward_finished.connect(func(ok: bool, data: Dictionary) -> void:
+			if ok and data.has("code"):
+				_hud.show_banner("🎁 " + tr("grand_claimed") + " " + str(data.code), 5.0),
+			CONNECT_ONE_SHOT)
+		Api.claim_grand_reward()
+	else:
+		_hud.show_banner("🎁 " + tr("grand_claimed"), 5.0)
 
 
 func _spawn_gate(room: Dictionary, pos: Vector3) -> void:
